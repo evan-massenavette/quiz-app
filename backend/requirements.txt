@@ -1,0 +1,3 @@
+# Required packages
+
+flask >= 2.2.2
