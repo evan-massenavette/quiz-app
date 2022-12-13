@@ -1,1 +1,1 @@
-# fullstrack_quiz_project
+# fullstack_quiz_project
