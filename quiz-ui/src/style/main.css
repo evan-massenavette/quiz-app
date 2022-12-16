@@ -1,0 +1,9 @@
+html[data-theme='dark'] {
+  --global-bg-color-1: #010409;
+  --global-bg-color-2: #0D1117;
+  --global-bg-color-3: #161B22;
+  --global-text-color-1: #FFFFFF;
+  --global-text-color-2: #C9D1D9;
+  --global-text-color-3: #8B949E;
+  --global-link-color: #58A6FF;
+}
