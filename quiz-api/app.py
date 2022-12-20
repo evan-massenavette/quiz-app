@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import auth
 from models import Question
+import database
 
 app = Flask(__name__)
 CORS(app)
@@ -81,21 +82,8 @@ def add_question():
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
-    # Check that we can add the question (there is not question already at that position)
-    can_add_question = True
-    if (can_add_question):
-        # Add question to database
-        pass
-    else:
-        return f'Question already present at position {question.position}', 422
-
-    # Add question to database
-
-    print()
-    print(question)
-    # print(mama.possibleAnswers[0].to_json())
-    print()
-    return 'Not implemented', 501
+    question_id = database.insert_question(question)
+    return {"id": question_id}, 200
 
 
 if __name__ == '__main__':

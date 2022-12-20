@@ -25,7 +25,7 @@ class Answer(JSONable):
 class Question(JSONable):
     def __init__(self, title: str, text: str, image: str, position: int, possibleAnswers: list[Answer]):
         self.title = title
-        self.text = title
+        self.text = text
         self.image = image
         self.position = position
         self.possibleAnswers = possibleAnswers
