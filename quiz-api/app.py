@@ -50,8 +50,12 @@ def get_question_id(id: int):
 
     # Get request question or database
     database = db.Database("bdd.db")
-    question = database.get_question_id(id)
-    database.close()
+    try:
+        question = database.get_question_id(id)
+    except Exception as e:
+        return e, 500
+    finally:
+        database.close()
     if question == None:
         return 'No question found', 404
     return question.to_json(), 200
