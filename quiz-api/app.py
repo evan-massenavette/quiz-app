@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import auth
 from models import Question
-import database
+import db
 
 app = Flask(__name__)
 CORS(app)
@@ -42,15 +42,19 @@ def delete_all_question():
     return 'Not implemented', 501
 
 
-@app.route('/questions', methods=['GET'])
-def get_question():
+@app.route('/questions/<int:id>', methods=['GET'])
+def get_question_id(id: int):
     # Check if the position arg was given
-    if (not request.args['position']):
+    if (id < 0):
         return 'Question position must be given', 422
 
-    # Get request question or database<
-
-    return 'Not implemented', 501
+    # Get request question or database
+    database = db.Database("bdd.db")
+    question = database.get_question_id(id)
+    database.close()
+    if question == None:
+        return 'No question found', 404
+    return question.to_json(), 200
 
 
 @app.route('/questions', methods=['PUT'])
