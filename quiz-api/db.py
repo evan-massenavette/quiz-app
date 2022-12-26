@@ -37,6 +37,9 @@ class Database():
         self.connection.close()
 
     # Queries on questions
+    def get_question_size(self) -> int:
+        return self.cursor.execute("SELECT COUNT(*) FROM Question;").fetchone()[0]
+
     def get_question_id(self, question_id: int) -> Question:
         res = self.cursor.execute(
             "SELECT * FROM Question WHERE id=?;", (question_id,))
@@ -48,11 +51,12 @@ class Database():
         return tuple_to_question(res.fetchone())
 
     def get_all_questions(self) -> list:
-        res = self.cursor.execute("SELECT * FROM Question")
+        res = self.cursor.execute(
+            "SELECT * FROM Question ORDER BY position ASC")
         return list(map(lambda x: tuple_to_question(x), res.fetchall()))
 
     def add_question(self, question: Question):
-        self.cursor.execute("INSERT INTO Question (title, text, position, image, answer0, answer1, answer2, answer3, correct_answer) VALUES (?, ?, ?, ?);",
+        self.cursor.execute("INSERT INTO Question (title, text, position, image, answer0, answer1, answer2, answer3, correct_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
                             question_to_tuple(question))
 
     def update_question(self, question: Question, question_id: int):
@@ -63,12 +67,13 @@ class Database():
         self.cursor.execute(
             "DELETE FROM Question WHERE id=?;", question_id)
 
+    def delete_all_question(self):
+        self.cursor.execute("DELETE FROM Question;")
+
     # Queries on scores
-    def get_score(self):
-        pass
-
     def get_all_scores(self):
-        pass
+        return list(map(lambda x: {"name": x.name, "score": x.score}, self.cursor.execute("SELECT * FROM Result;").fetchall()))
 
-    def set_score(self):
-        pass
+    def set_score(self, name, score):
+        self.cursor.execute(
+            "INSERT INTO Result (name,score) VALUES (?, ?)", (name, score))

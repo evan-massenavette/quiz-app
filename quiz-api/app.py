@@ -8,15 +8,19 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/')
-def hello_world():
-    x = 'world'
-    return f"Hello, {x}"
-
-
 @app.route('/quiz-info', methods=['GET'])
 def get_quiz_info():
-    return {"size": 0, "scores": []}, 200
+    # Get info from database
+    database = db.Database("bdd.db")
+    try:
+        size = database.get_question_size()
+        scores = database.get_all_scores()
+    except Exception as e:
+        return f'Error while requesting content: {e}', 500
+    finally:
+        database.close()
+
+    return {"size": size, "scores": scores}, 200
 
 
 @app.route('/login', methods=['POST'])
@@ -38,33 +42,47 @@ def delete_all_question():
     # request.headers.get('Authorization')
 
     # Delete all questions from database
+    database = db.Database("bdd.db")
+    try:
+        database.delete_all_question()
+    except Exception as e:
+        return f'Error while deleting content: {e}', 500
+    finally:
+        database.close()
 
-    return 'Not implemented', 501
+    return 'All content deleted', 200
 
 
 @app.route('/questions/<int:id>', methods=['GET'])
 def get_question_id(id: int):
-    # Check if the position arg was given
+    # Check if the id arg was given
     if (id < 0):
-        return 'Question position must be given', 422
+        return 'Question id must be given', 422
 
     # Get request question or database
     database = db.Database("bdd.db")
     try:
         question = database.get_question_id(id)
     except Exception as e:
-        return e, 500
+        return f'Error while requesting content: {e}', 500
     finally:
         database.close()
+
+    # On vérifie que la question a bien été trouvé
     if question == None:
         return 'No question found', 404
+
     return question.to_json(), 200
 
 
-@app.route('/questions', methods=['PUT'])
-def update_question():
+@app.route('/questions/<int:id>', methods=['PUT'])
+def update_question(id: int):
     # Check for admin auth
     # request.headers.get('Authorization')
+
+    # Check if the id arg was given
+    if (id < 0):
+        return 'Question id must be given', 422
 
     # Read question in request
     try:
@@ -74,8 +92,15 @@ def update_question():
         return f'Cannot read question: {e}', 400
 
     # Update question at given postion in database
+    database = db.Database("bdd.db")
+    try:
+        database.update_question(question, id)
+    except Exception as e:
+        return f'Error while updating content: {e}', 500
+    finally:
+        database.close()
 
-    return 'Not implemented', 501
+    return 'Question updated', 200
 
 
 @app.route('/questions', methods=['POST'])
@@ -90,8 +115,49 @@ def add_question():
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
-    question_id = database.insert_question(question)
-    return {"id": question_id}, 200
+    # Add question in database
+    database = db.Database("bdd.db")
+    try:
+        database.add_question(question)
+    except Exception as e:
+        return f'Error while inserting content: {e}', 500
+    finally:
+        database.close()
+
+    return "Question inserted", 200
+
+
+def score(questions, answers):
+    # Calculate score
+    score = 0
+    for i in range(len(answers)):
+        if questions[i].possibleAnswers[answers[i]-1].isCorrect:
+            score += 1
+
+    return score
+
+
+@app.route('/participations', methods=['POST'])
+def add_participation():
+    try:
+        payload = request.get_json()
+        name = payload.name
+        answers = payload.answers
+    except Exception as e:
+        return f'Cannot read question: {e}', 400
+
+    # Get question in database
+    database = db.Database("bdd.db")
+    try:
+        questions = database.get_all_questions()
+        calculatedScore = score(questions, answers)
+        database.set_score(name, calculatedScore)
+    except Exception as e:
+        return f'Error while getting or setting content: {e}', 500
+    finally:
+        database.close()
+
+    return "Participation added", 200
 
 
 if __name__ == '__main__':
