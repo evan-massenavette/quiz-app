@@ -52,6 +52,22 @@ def delete_all_question():
 
     return 'All content deleted', 200
 
+@app.route('/questions/<int:id>', methods=['DELETE'])
+def delete_question(id: int):
+    # Check for admin auth
+    # request.headers.get('Authorization')
+
+    # Delete all questions from database
+    database = db.Database("bdd.db")
+    try:
+        database.delete_question(id)
+    except Exception as e:
+        return f'Error while deleting content: {e}', 500
+    finally:
+        database.close()
+
+    return 'Content deleted', 200
+
 
 @app.route('/questions/<int:id>', methods=['GET'])
 def get_question_id(id: int):
@@ -63,6 +79,28 @@ def get_question_id(id: int):
     database = db.Database("bdd.db")
     try:
         question = database.get_question_id(id)
+    except Exception as e:
+        return f'Error while requesting content: {e}', 500
+    finally:
+        database.close()
+
+    # On vérifie que la question a bien été trouvé
+    if question == None:
+        return 'No question found', 404
+
+    return question.to_json(), 200
+
+@app.route('/questions', methods=['GET'])
+def get_question_pos():
+    # Check if the pos arg was given
+    pos = int(request.args.get('position'))
+    if (pos < 0):
+        return 'Question pos must be given', 422
+
+    # Get request question or database
+    database = db.Database("bdd.db")
+    try:
+        question = database.get_question_pos(pos)
     except Exception as e:
         return f'Error while requesting content: {e}', 500
     finally:
