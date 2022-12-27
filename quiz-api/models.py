@@ -17,9 +17,9 @@ class Answer(JSONable):
         self.text = text
         self.isCorrect = isCorrect
 
-    def __init__(self, json_obj: dict[str]):
-        self.text = json_obj['text']
-        self.isCorrect = json_obj['isCorrect']
+    @classmethod
+    def from_json(cls, json_obj: dict):
+        return cls(json_obj['text'], json_obj['isCorrect'])
 
 
 class Question(JSONable):
@@ -30,10 +30,8 @@ class Question(JSONable):
         self.position = position
         self.possibleAnswers = possibleAnswers
 
-    def __init__(self, json_obj: dict[str]):
-        self.title = json_obj['title']
-        self.text = json_obj['title']
-        self.image = json_obj['image']
-        self.position = json_obj['position']
-        self.possibleAnswers = list(
-            map(lambda x: Answer(x), json_obj["possibleAnswers"]))
+    @classmethod
+    def from_json(cls, json_obj: dict):
+        possibleAnswers = [Answer.from_json(
+            answer_json) for answer_json in json_obj['possibleAnswers']]
+        return cls(json_obj['title'], json_obj['text'], json_obj['image'], json_obj['position'], possibleAnswers)

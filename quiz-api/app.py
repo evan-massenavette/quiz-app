@@ -21,7 +21,7 @@ def get_quiz_info():
 
 @app.route('/login', methods=['POST'])
 def login():
-    payload = request.get_json()
+    payload: dict = request.get_json()  # type: ignore
     if auth.is_password_valid(payload["password"]):
         try:
             token = auth.create_token()
@@ -60,8 +60,8 @@ def update_question():
 
     # Read question in request
     try:
-        payload = request.get_json()
-        question = Question(payload)
+        payload: dict = request.get_json()  # type: ignore
+        question = Question.from_json(payload)
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
@@ -77,8 +77,8 @@ def add_question():
 
     # Read question in request
     try:
-        payload = request.get_json()
-        question = Question(payload)
+        payload: dict = request.get_json()  # type: ignore
+        question = Question.from_json(payload)
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
