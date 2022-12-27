@@ -7,44 +7,46 @@ import db
 app = Flask(__name__)
 CORS(app)
 
+DB_URL = 'bdd.db'
+
 
 @app.route('/quiz-info', methods=['GET'])
 def get_quiz_info():
     # Get info from database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
-        size = database.get_question_size()
+        size = database.get_questions_amount()
         scores = database.get_all_scores()
     except Exception as e:
         return f'Error while requesting content: {e}', 500
     finally:
         database.close()
 
-    return {"size": size, "scores": scores}, 200
+    return {'size': size, 'scores': scores}, 200
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    payload: dict = request.get_json()  # type: ignore
-    if auth.is_password_valid(payload["password"]):
+    payload = dict(request.get_json())  # type: ignore
+    if auth.is_password_valid(payload['password']):
         try:
             token = auth.create_token()
-            return {"token": token}, 200
+            return {'token': token}, 200
         except Exception:
-            return "Internal Server Error", 500
+            return 'Internal Server Error', 500
     else:
         return 'Unauthorized', 401
 
 
 @app.route('/questions/all', methods=['DELETE'])
-def delete_all_question():
+def delete_all_questions():
     # Check for admin auth
     # request.headers.get('Authorization')
 
     # Delete all questions from database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
-        database.delete_all_question()
+        database.delete_all_questions()
     except Exception as e:
         return f'Error while deleting content: {e}', 500
     finally:
@@ -52,13 +54,14 @@ def delete_all_question():
 
     return 'All content deleted', 200
 
+
 @app.route('/questions/<int:id>', methods=['DELETE'])
 def delete_question(id: int):
     # Check for admin auth
     # request.headers.get('Authorization')
 
     # Delete all questions from database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
         database.delete_question(id)
     except Exception as e:
@@ -70,15 +73,15 @@ def delete_question(id: int):
 
 
 @app.route('/questions/<int:id>', methods=['GET'])
-def get_question_id(id: int):
+def get_question_from_id(id: int):
     # Check if the id arg was given
     if (id < 0):
         return 'Question id must be given', 422
 
     # Get request question or database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
-        question = database.get_question_id(id)
+        question = database.get_question_from_id(id)
     except Exception as e:
         return f'Error while requesting content: {e}', 500
     finally:
@@ -90,17 +93,18 @@ def get_question_id(id: int):
 
     return question.to_json(), 200
 
+
 @app.route('/questions', methods=['GET'])
-def get_question_pos():
+def get_question_from_pos():
     # Check if the pos arg was given
-    pos = int(request.args.get('position'))
-    if (pos < 0):
+    pos = request.args.get('position', None, type=int)
+    if pos is None:
         return 'Question pos must be given', 422
 
     # Get request question or database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
-        question = database.get_question_pos(pos)
+        question = database.get_question_from_pos(pos)
     except Exception as e:
         return f'Error while requesting content: {e}', 500
     finally:
@@ -124,13 +128,13 @@ def update_question(id: int):
 
     # Read question in request
     try:
-        payload: dict = request.get_json()  # type: ignore
+        payload = dict(request.get_json())  # type: ignore
         question = Question.from_json(payload)
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
     # Update question at given postion in database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
         database.update_question(question, id)
     except Exception as e:
@@ -148,13 +152,13 @@ def add_question():
 
     # Read question in request
     try:
-        payload: dict = request.get_json()  # type: ignore
+        payload = dict(request.get_json())  # type: ignore
         question = Question.from_json(payload)
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
     # Add question in database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
         database.add_question(question)
     except Exception as e:
@@ -178,18 +182,16 @@ def score(questions, answers):
 @app.route('/participations', methods=['POST'])
 def add_participation():
     try:
-        payload = request.get_json()
-        name = payload.name
-        answers = payload.answers
+        payload = dict(request.get_json())  # type: ignore
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
     # Get question in database
-    database = db.Database("bdd.db")
+    database = db.Database(DB_URL)
     try:
         questions = database.get_all_questions()
-        calculatedScore = score(questions, answers)
-        database.set_score(name, calculatedScore)
+        calculatedScore = score(questions, payload['answers'])
+        database.set_score(payload['name'], calculatedScore)
     except Exception as e:
         return f'Error while getting or setting content: {e}', 500
     finally:
