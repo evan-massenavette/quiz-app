@@ -39,6 +39,8 @@ def get_question_from_id(id: int):
     database = db.Database(DB_URL)
     try:
         question = database.get_question_from_id(id)
+    except ValueError:
+        return 'Non existent content', 404
     except Exception as e:
         return f'Error while requesting content: {e}', 500
     finally:
@@ -62,6 +64,8 @@ def get_question_from_pos():
     database = db.Database(DB_URL)
     try:
         question = database.get_question_from_pos(pos)
+    except ValueError:
+        return 'Non existent content', 404
     except Exception as e:
         return f'Error while requesting content: {e}', 500
     finally:
@@ -112,7 +116,8 @@ def delete_question(id: int):
     # Delete all questions from database
     database = db.Database(DB_URL)
     try:
-        database.delete_question(id)
+        if not database.delete_question(id):
+            return 'No existing content', 404
     except Exception as e:
         return f'Error while deleting content: {e}', 500
     finally:
@@ -140,7 +145,8 @@ def update_question(id: int):
     # Update question at given position in database
     database = db.Database(DB_URL)
     try:
-        database.update_question(question, id)
+        if not database.update_question(question, id):
+            return 'Non existent content', 404
     except Exception as e:
         return f'Error while updating content: {e}', 500
     finally:

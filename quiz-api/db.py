@@ -22,7 +22,12 @@ class Database():
     def get_question_from_id(self, question_id: int) -> Question:
         res = self.cursor.execute(
             'SELECT * FROM Question WHERE id=?;', (question_id,))
-        return Question.from_tuple(res.fetchone())
+
+        # Check if result is not empty
+        question_tuple = res.fetchone()
+        if question_tuple is None:
+            raise ValueError(f'No question exists with id {question_id}')
+        return Question.from_tuple(question_tuple)
 
     def get_question_from_pos(self, question_pos: int) -> Question:
         res = self.cursor.execute(
@@ -44,13 +49,18 @@ class Database():
                             question.to_tuple())
         return self.cursor.lastrowid
 
-    def update_question(self, question: Question, question_id: int):
-        self.cursor.execute('UPDATE Question SET title = ?, text = ?, position = ?, image = ?, answer0 = ?, answer1 = ?, answer2 = ?, answer3 = ?, correct_answer = ? WHERE id=?;',
-                            question.to_tuple()+(question_id,))
+    def update_question(self, question: Question, question_id: int) -> bool:
+        try:
+            self.cursor.execute('UPDATE Question SET title = ?, text = ?, position = ?, image = ?, answer0 = ?, answer1 = ?, answer2 = ?, answer3 = ?, correct_answer = ? WHERE id=?;',
+                                question.to_tuple()+(question_id,))
+        except IndexError:
+            return False
+        return True
 
-    def delete_question(self, question_id: int):
+    def delete_question(self, question_id: int) -> bool:
         self.cursor.execute(
             'DELETE FROM Question WHERE id=?;', (question_id,))
+        return self.cursor.rowcount > 0
 
     def delete_all_questions(self):
         self.cursor.execute('DELETE FROM Question;')
