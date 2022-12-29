@@ -42,6 +42,7 @@ class Database():
     def add_question(self, question: Question):
         self.cursor.execute('INSERT INTO Question (title, text, position, image, answer0, answer1, answer2, answer3, correct_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
                             question.to_tuple())
+        return self.cursor.lastrowid
 
     def update_question(self, question: Question, question_id: int):
         self.cursor.execute('UPDATE Question SET title = ?, text = ?, position = ?, image = ?, answer0 = ?, answer1 = ?, answer2 = ?, answer3 = ?, correct_answer = ? WHERE id=?;',
@@ -61,4 +62,7 @@ class Database():
 
     def set_score(self, name, score):
         self.cursor.execute(
-            'INSERT INTO Result (name,score) VALUES (?, ?)', (name, score))
+            'INSERT INTO Result (name,score) VALUES (?, ?);', (name, score))
+
+    def delete_all_scores(self):
+        self.cursor.execute('DELETE FROM Result;')

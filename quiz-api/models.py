@@ -5,7 +5,9 @@ from typing import NamedTuple
 
 class JSONable(dict):
     def to_json(self):
-        return json.dumps(self)
+        json_obj = json.loads(json.dumps(self))
+        json_obj["position"] = int(json_obj["position"])
+        return json_obj
 
     def __getattr__(self, name: str):
         return self[name]
@@ -41,8 +43,8 @@ class Question(JSONable):
     class DbTuple(NamedTuple):
         title: str
         text: str
-        image: str
         position: int
+        image: str
         possible_answer_0_text: str
         possible_answer_1_text: str
         possible_answer_2_text: str
@@ -55,19 +57,21 @@ class Question(JSONable):
         if question_tuple is None:
             raise TypeError('Given question tuple cannot be None')
         if not isinstance(question_tuple, cls.DbTuple):
-            question_tuple = cls.DbTuple(*question_tuple)
+            question_tuple = cls.DbTuple(*question_tuple[1:])
 
         # Convert possible answers
         possible_answers = []
-        for idx_question in range(4):
+        possible_answers_text = [question_tuple.possible_answer_0_text, question_tuple.possible_answer_1_text,
+                                 question_tuple.possible_answer_2_text, question_tuple.possible_answer_3_text]
+        for idx in range(4):
             possible_answers.append(Answer.from_json(
-                {"text": question_tuple[5+idx_question], "isCorrect": idx_question == question_tuple[9]}))
+                {"text": possible_answers_text[idx], "isCorrect": idx == question_tuple.correct_answer_idx}))
 
         # Get other data from tuple
-        title = question_tuple[1]
-        text = question_tuple[2]
-        position = question_tuple[3]
-        image = question_tuple[4]
+        title = question_tuple.title
+        text = question_tuple.text
+        position = question_tuple.position
+        image = question_tuple.image
 
         # Return the question
         return cls(title, text, image, position, possible_answers)

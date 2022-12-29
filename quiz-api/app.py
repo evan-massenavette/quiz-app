@@ -9,6 +9,10 @@ CORS(app)
 
 DB_URL = 'bdd.db'
 
+###
+# questions requests
+###
+
 
 @app.route('/quiz-info', methods=['GET'])
 def get_quiz_info():
@@ -23,53 +27,6 @@ def get_quiz_info():
         database.close()
 
     return {'size': size, 'scores': scores}, 200
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    payload = dict(request.get_json())  # type: ignore
-    if auth.is_password_valid(payload['password']):
-        try:
-            token = auth.create_token()
-            return {'token': token}, 200
-        except Exception:
-            return 'Internal Server Error', 500
-    else:
-        return 'Unauthorized', 401
-
-
-@app.route('/questions/all', methods=['DELETE'])
-def delete_all_questions():
-    # Check for admin auth
-    # request.headers.get('Authorization')
-
-    # Delete all questions from database
-    database = db.Database(DB_URL)
-    try:
-        database.delete_all_questions()
-    except Exception as e:
-        return f'Error while deleting content: {e}', 500
-    finally:
-        database.close()
-
-    return 'All content deleted', 200
-
-
-@app.route('/questions/<int:id>', methods=['DELETE'])
-def delete_question(id: int):
-    # Check for admin auth
-    # request.headers.get('Authorization')
-
-    # Delete all questions from database
-    database = db.Database(DB_URL)
-    try:
-        database.delete_question(id)
-    except Exception as e:
-        return f'Error while deleting content: {e}', 500
-    finally:
-        database.close()
-
-    return 'Content deleted', 200
 
 
 @app.route('/questions/<int:id>', methods=['GET'])
@@ -117,6 +74,53 @@ def get_question_from_pos():
     return question.to_json(), 200
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    payload = dict(request.get_json())  # type: ignore
+    if auth.is_password_valid(payload['password']):
+        try:
+            token = auth.create_token()
+            return {'token': token}, 200
+        except Exception:
+            return 'Internal Server Error', 500
+    else:
+        return 'Unauthorized', 401
+
+
+@app.route('/questions/all', methods=['DELETE'])
+def delete_all_questions():
+    # Check for admin auth
+    # request.headers.get('Authorization')
+
+    # Delete all questions from database
+    database = db.Database(DB_URL)
+    try:
+        database.delete_all_questions()
+    except Exception as e:
+        return f'Error while deleting content: {e}', 500
+    finally:
+        database.close()
+
+    return 'All content deleted', 204
+
+
+@app.route('/questions/<int:id>', methods=['DELETE'])
+def delete_question(id: int):
+    # Check for admin auth
+    # request.headers.get('Authorization')
+
+    # Delete all questions from database
+    database = db.Database(DB_URL)
+    try:
+        database.delete_question(id)
+    except Exception as e:
+        return f'Error while deleting content: {e}', 500
+    finally:
+        database.close()
+
+    return 'Content deleted', 204
+
+
 @app.route('/questions/<int:id>', methods=['PUT'])
 def update_question(id: int):
     # Check for admin auth
@@ -133,7 +137,7 @@ def update_question(id: int):
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
-    # Update question at given postion in database
+    # Update question at given position in database
     database = db.Database(DB_URL)
     try:
         database.update_question(question, id)
@@ -160,19 +164,23 @@ def add_question():
     # Add question in database
     database = db.Database(DB_URL)
     try:
-        database.add_question(question)
+        id = database.add_question(question)
     except Exception as e:
         return f'Error while inserting content: {e}', 500
     finally:
         database.close()
 
-    return "Question inserted", 200
+    return {"id": id}, 200
+
+###
+# Participations requests
+###
 
 
 def score(questions, answers):
     # Calculate score
     score = 0
-    for i in range(len(answers)):
+    for i in range(len(questions)):
         if questions[i].possibleAnswers[answers[i]-1].isCorrect:
             score += 1
 
@@ -190,7 +198,10 @@ def add_participation():
     database = db.Database(DB_URL)
     try:
         questions = database.get_all_questions()
-        calculatedScore = score(questions, payload['answers'])
+        answers = payload['answers']
+        if len(questions) != len(answers):
+            return 'Wrong number of answers', 400
+        calculatedScore = score(questions, answers)
         database.set_score(payload['name'], calculatedScore)
     except Exception as e:
         return f'Error while getting or setting content: {e}', 500
@@ -198,6 +209,23 @@ def add_participation():
         database.close()
 
     return "Participation added", 200
+
+
+@app.route('/participations/all', methods=['DELETE'])
+def delete_all_participations():
+    # Check for admin auth
+    # request.headers.get('Authorization')
+
+    # Delete all questions from database
+    database = db.Database(DB_URL)
+    try:
+        database.delete_all_scores()
+    except Exception as e:
+        return f'Error while deleting content: {e}', 500
+    finally:
+        database.close()
+
+    return 'All content deleted', 204
 
 
 if __name__ == '__main__':
