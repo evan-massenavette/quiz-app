@@ -15,7 +15,44 @@ class Database():
         self.cursor.close()
         self.connection.close()
 
+    # Build database tables
+    def build_tables(self):
+        drop_table_question = "DROP TABLE IF EXISTS question"
+        drop_table_result = "DROP TABLE IF EXISTS result"
+        create_table_question = """
+        CREATE TABLE question (
+            id INTEGER NOT NULL UNIQUE,
+            title TEXT NOT NULL,
+            text TEXT NOT NULL,
+            position INTEGER NOT NULL UNIQUE,
+            image TEXT NOT NULL,
+            answer0 TEXT NOT NULL,
+            answer1 INTEGER NOT NULL,
+            answer2 INTEGER NOT NULL,
+            answer3 INTEGER NOT NULL,
+            correct_answer    INTEGER NOT NULL,
+            PRIMARY KEY(id AUTOINCREMENT)
+        )
+        """
+        create_table_result = """
+        CREATE TABLE result (
+            id INTEGER NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            score INTEGER NOT NULL,
+            PRIMARY KEY(id AUTOINCREMENT)
+        )
+        """
+        self.cursor.execute(drop_table_question)
+        self.cursor.execute(drop_table_result)
+        self.cursor.execute(create_table_question)
+        self.cursor.execute(create_table_result)
+        return 200, "Ok"
+
+    def add_initial_data(self):
+        return 501, 'Not implemented yet'
+
     # Queries on questions
+
     def get_questions_amount(self) -> int:
         return self.cursor.execute('SELECT COUNT(*) FROM Question;').fetchone()[0]
 

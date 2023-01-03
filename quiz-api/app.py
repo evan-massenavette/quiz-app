@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import auth
 from models import Question
-from db import Database
+from database import Database
 
 app = Flask(__name__)
 CORS(app)
@@ -10,7 +10,29 @@ CORS(app)
 DB_URL = 'bdd.db'
 
 ###
-# questions requests
+# Rebuild database / Add static data
+###
+
+
+@app.route('/rebuild-db', methods=['POST'])
+def rebuild_database():
+    database = Database(DB_URL)
+    try:
+        database.build_tables()
+    except Exception as e:
+        return f'Error while rebuilding database: {e}', 500
+    finally:
+        database.close()
+    return 'Ok', 200
+
+
+@app.route('/add-initial-data', methods=['POST'])
+def add_initial_data():
+    return 501, 'Not implemented yet'
+
+
+###
+# Questions requests
 ###
 
 
