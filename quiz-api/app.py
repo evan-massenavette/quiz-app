@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import auth
 from models import Question
-import db
+from db import Database
 
 app = Flask(__name__)
 CORS(app)
@@ -17,7 +17,7 @@ DB_URL = 'bdd.db'
 @app.route('/quiz-info', methods=['GET'])
 def get_quiz_info():
     # Get info from database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         size = database.get_questions_amount()
         scores = database.get_all_scores()
@@ -36,7 +36,7 @@ def get_question_from_id(id: int):
         return 'Question id must be given', 422
 
     # Get request question or database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         question = database.get_question_from_id(id)
     except ValueError:
@@ -61,7 +61,7 @@ def get_question_from_pos():
         return 'Question pos must be given', 422
 
     # Get request question or database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         question = database.get_question_from_pos(pos)
     except ValueError:
@@ -97,7 +97,7 @@ def delete_all_questions():
     # request.headers.get('Authorization')
 
     # Delete all questions from database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         database.delete_all_questions()
     except Exception as e:
@@ -114,7 +114,7 @@ def delete_question(id: int):
     # request.headers.get('Authorization')
 
     # Delete all questions from database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         if not database.delete_question(id):
             return 'No existing content', 404
@@ -143,7 +143,7 @@ def update_question(id: int):
         return f'Cannot read question: {e}', 400
 
     # Update question at given position in database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         if not database.update_question(question, id):
             return 'Non existent content', 404
@@ -168,7 +168,7 @@ def add_question():
         return f'Cannot read question: {e}', 400
 
     # Add question in database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         id = database.add_question(question)
     except Exception as e:
@@ -201,7 +201,7 @@ def add_participation():
         return f'Cannot read question: {e}', 400
 
     # Get question in database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         questions = database.get_all_questions()
         answers = payload['answers']
@@ -223,7 +223,7 @@ def delete_all_participations():
     # request.headers.get('Authorization')
 
     # Delete all questions from database
-    database = db.Database(DB_URL)
+    database = Database(DB_URL)
     try:
         database.delete_all_scores()
     except Exception as e:
