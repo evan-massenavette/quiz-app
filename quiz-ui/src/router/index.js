@@ -25,6 +25,16 @@ const router = createRouter({
       path: '/questions',
       name: 'Questions',
       component: () => import('@/views/QuestionManager.vue')
+    },
+    {
+      path: '/administration',
+      name: 'AdministrationPage',
+      component: () => import('@/views/AdministrationPage.vue')
+    },
+    {
+      path: '/login',
+      name: 'LoginPage',
+      component: () => import('@/views/LoginPage.vue')
     }
   ]
 })
