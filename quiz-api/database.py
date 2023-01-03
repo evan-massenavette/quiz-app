@@ -17,10 +17,10 @@ class Database():
 
     # Build database tables
     def build_tables(self):
-        drop_table_question = "DROP TABLE IF EXISTS question"
-        drop_table_result = "DROP TABLE IF EXISTS result"
+        drop_table_question = "DROP TABLE IF EXISTS Question"
+        drop_table_result = "DROP TABLE IF EXISTS Result"
         create_table_question = """
-        CREATE TABLE question (
+        CREATE TABLE Question (
             id INTEGER NOT NULL UNIQUE,
             title TEXT NOT NULL,
             text TEXT NOT NULL,
@@ -35,7 +35,7 @@ class Database():
         )
         """
         create_table_result = """
-        CREATE TABLE result (
+        CREATE TABLE Result (
             id INTEGER NOT NULL UNIQUE,
             name TEXT NOT NULL,
             score INTEGER NOT NULL,
@@ -53,10 +53,15 @@ class Database():
 
     # Queries on questions
 
+    def get_max_position(self) -> int:
+        res = self.cursor.execute('SELECT MAX(position) FROM Question;')
+        return res.fetchone()[0] or 0
+
     def get_questions_amount(self) -> int:
         return self.cursor.execute('SELECT COUNT(*) FROM Question;').fetchone()[0]
 
     def get_question_from_id(self, question_id: int) -> Question:
+        """Get a question from its id. Raises a ValueError if no question is found with the given id."""
         res = self.cursor.execute(
             'SELECT * FROM Question WHERE id=?;', (question_id,))
 
@@ -67,6 +72,7 @@ class Database():
         return Question.from_tuple(question_tuple)
 
     def get_question_from_pos(self, question_pos: int) -> Question:
+        """Get a question from its position. Raises a ValueError if no question is found with the given position."""
         res = self.cursor.execute(
             'SELECT * FROM Question WHERE position=?;', (question_pos,))
 
@@ -86,10 +92,20 @@ class Database():
                             question.to_tuple())
         return self.cursor.lastrowid
 
-    def update_question(self, question: Question, question_id: int) -> bool:
+    def update_question_from_id(self, question: Question, question_id: int) -> bool:
+        """Returns True if it succeeds, otherwise returns False"""
         try:
             self.cursor.execute('UPDATE Question SET title = ?, text = ?, position = ?, image = ?, answer0 = ?, answer1 = ?, answer2 = ?, answer3 = ?, correct_answer = ? WHERE id=?;',
                                 question.to_tuple()+(question_id,))
+        except IndexError:
+            return False
+        return True
+
+    def update_question_from_pos(self, question: Question, question_pos: int) -> bool:
+        """Returns True if it succeeds, otherwise returns False"""
+        try:
+            self.cursor.execute('UPDATE Question SET title = ?, text = ?, position = ?, image = ?, answer0 = ?, answer1 = ?, answer2 = ?, answer3 = ?, correct_answer = ? WHERE position=?;',
+                                question.to_tuple()+(question_pos,))
         except IndexError:
             return False
         return True
