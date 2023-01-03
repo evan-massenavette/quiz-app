@@ -1,8 +1,9 @@
 from flask import Flask, request
 from flask_cors import CORS
+
 import auth
-from models import Question
 from database import Database
+from models import Question
 
 app = Flask(__name__)
 CORS(app)
@@ -116,7 +117,9 @@ def login():
 @app.route('/questions/all', methods=['DELETE'])
 def delete_all_questions():
     # Check for admin auth
-    # request.headers.get('Authorization')
+    jwt = request.headers.get('Authorization')
+    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+        return 'Unauthorized', 401
 
     # Delete all questions from database
     database = Database(DB_URL)
@@ -133,7 +136,9 @@ def delete_all_questions():
 @app.route('/questions/<int:id>', methods=['DELETE'])
 def delete_question(id: int):
     # Check for admin auth
-    # request.headers.get('Authorization')
+    jwt = request.headers.get('Authorization')
+    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+        return 'Unauthorized', 401
 
     # Delete all questions from database
     database = Database(DB_URL)
@@ -148,14 +153,25 @@ def delete_question(id: int):
     return 'Content deleted', 204
 
 
+def shift_questions(database: Database, pos_range: range, pos_shift: int):
+    pos_list = list(pos_range)
+    if pos_shift > 0:
+        pos_list.reverse()
+
+    for old_pos in pos_list:
+        question_to_change = database.get_question_from_pos(old_pos)
+        question_to_change.position += pos_shift
+        database.update_question_from_pos(question_to_change, old_pos)
+
+
 @app.route('/questions/<int:id>', methods=['PUT'])
 def update_question(id: int):
     # Check for admin auth
     # request.headers.get('Authorization')
 
-    # Check if the id arg was given
+    # Check if id arg is valid
     if (id < 0):
-        return 'Question id must be given', 422
+        return 'Question id must be positive', 422
 
     # Read question in request
     try:
@@ -164,23 +180,62 @@ def update_question(id: int):
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
-    # Update question at given position in database
+    # Connect to database
     database = Database(DB_URL)
+
     try:
-        if not database.update_question(question, id):
-            return 'Non existent content', 404
+        question_with_same_id = database.get_question_from_id(id)
+    except ValueError as e:
+        database.close()
+        return f'No question exists with id {id}', 404
+    old_position = question_with_same_id.position
+    new_position = question.position
+
+    # Check that old_position is in valid bounds
+    max_position = database.get_max_position()
+    if old_position > max_position:
+        database.close()
+        return f'Given position ({old_position}) is higher than maximum position ({max_position})', 500
+
+    # Move question out of the way to allow ofr shifting
+    question.position = max_position+2
+    database.update_question_from_id(question, id)
+
+    # Question gets moved down in position : move others up in position
+    if (new_position < old_position):
+        pos_range = range(new_position, old_position)
+        pos_shift = 1
+
+    # Question gets moved up in position : move others down in position
+    else:
+        pos_range = range(old_position+1, new_position+1)
+        pos_shift = -1
+
+    # Reorder questions
+    try:
+        shift_questions(database, pos_range, pos_shift)
+    except Exception as e:
+        database.close()
+        return f'Error while reordering questions: {e}', 500
+
+    # Update given question in database
+    try:
+        question.position = new_position
+        database.update_question_from_id(question, id)
     except Exception as e:
         return f'Error while updating content: {e}', 500
     finally:
         database.close()
 
-    return 'Question updated', 200
+    return 'Question updated', 204
 
 
 @app.route('/questions', methods=['POST'])
 def add_question():
     # Check for admin auth
-    # request.headers.get('Authorization')
+    jwt = request.headers.get('Authorization')
+    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+        return 'Unauthorized', 401
 
     # Read question in request
     try:
@@ -189,8 +244,29 @@ def add_question():
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
-    # Add question in database
+    # Connect to database
     database = Database(DB_URL)
+
+    new_max_position = database.get_max_position() + 1
+    new_position = question.position
+
+    # Check that old_position is in valid bounds
+    if new_position > new_max_position:
+        database.close()
+        return f'Given position ({new_position}) is higher than maximum allowed position ({new_max_position})', 500
+
+    # Question gets added at new pos : move others up in position
+    pos_range = range(new_position, new_max_position)
+    pos_shift = 1
+
+    # Reorder questions
+    try:
+        shift_questions(database, pos_range, pos_shift)
+    except Exception as e:
+        database.close()
+        return f'Error while reordering questions: {e}', 500
+
+    # Add question in database
     try:
         id = database.add_question(question)
     except Exception as e:
@@ -198,7 +274,7 @@ def add_question():
     finally:
         database.close()
 
-    return {"id": id}, 200
+    return {'id': id}, 200
 
 ###
 # Participations requests
@@ -242,7 +318,9 @@ def add_participation():
 @app.route('/participations/all', methods=['DELETE'])
 def delete_all_participations():
     # Check for admin auth
-    # request.headers.get('Authorization')
+    jwt = request.headers.get('Authorization')
+    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+        return 'Unauthorized', 401
 
     # Delete all questions from database
     database = Database(DB_URL)
