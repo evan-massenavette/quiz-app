@@ -3,81 +3,70 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <v-app>
+    <v-app-bar app height="60">
+      <template v-slot:prepend>
+        <RouterLink class="router-link-home" to="/">
+          <v-icon icon="mdi-home" />
+          <p>Home</p>
+        </RouterLink>
+      </template>
+      <v-spacer></v-spacer>
+      <template v-slot:append>
+        <RouterLink class="router-link-login" to="/login">
+          <v-icon icon="mdi-account" />
+          <p>Admin login</p>
+        </RouterLink>
+      </template>
+    </v-app-bar>
 
-    <div class="wrapper">
+    <v-main full-width>
+      <v-parallax src="src/assets/Images/ivana-cajina-asuyh-_ZX54-unsplash.jpg">
+        <v-container fluid>
+          <RouterView />
+        </v-container>
+      </v-parallax>
+    </v-main>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <v-footer app height="47" color="black">Juste un test du footer
+    </v-footer>
+  </v-app>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script>
+export default {
+  name: 'App'
+};
+</script>
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
+<style>
+.router-link-home {
   display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  width: 90px;
+  height: 50px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-nav a:first-of-type {
-  border: 0;
+.router-link-home:hover {
+  color: #111166;
+  background-color: #e4eaf7;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.router-link-login {
+  display: inline-block;
+  width: 130px;
+  height: 50px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.router-link-login:hover {
+  color: #111166;
+  background-color: #e4eaf7;
 }
 </style>
