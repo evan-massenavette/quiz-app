@@ -1,8 +1,12 @@
 <template>
-  <v-card>
-    <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h1>
-    <QuestionDisplay :question="currentQuestion" @click-on-answer="answerClickedHandler" />
-  </v-card>
+  <v-container>
+    <v-card class="mx-auto my-12">
+      <div class="card-content"> <!--hérite du style de HomePage-->
+        <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }} :</h1>
+        <QuestionDisplay :question="currentQuestion" @click-on-answer="answerClickedHandler" />
+      </div>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -39,14 +43,14 @@ export default {
       if (this.currentQuestionPosition > this.totalNumberOfQuestion) {
         this.endQuiz();
       } else {
-        this.loadQuestionByPosition()
+        this.loadQuestionByPosition();
       }
     },
     endQuiz() {
       //TODO Ajouter fin quizz
     },
     async loadQuestionByPosition() {
-      const question = await QuizApiService.getQuestion(this.currentQuestionPosition).data
+      const question = await QuizApiService.getQuestion(this.currentQuestionPosition).data;
       this.currentQuestion.questionText = question.text;
       this.currentQuestion.questionTitle = question.title;
       this.currentQuestion.image = question.image;
