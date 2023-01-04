@@ -20,16 +20,11 @@ import { RouterLink, RouterView } from 'vue-router'
       </template>
     </v-app-bar>
 
-    <v-main full-width>
-      <v-parallax src="src/assets/Images/ivana-cajina-asuyh-_ZX54-unsplash.jpg">
-        <v-container fluid>
-          <RouterView />
-        </v-container>
+    <v-main class="main-page-content">
+      <v-parallax mx-auto src="/src/assets/Images/ivana-cajina-asuyh-_ZX54-unsplash.jpg">
+        <RouterView />
       </v-parallax>
     </v-main>
-
-    <v-footer app height="47" color="black">Juste un test du footer
-    </v-footer>
   </v-app>
 </template>
 
@@ -68,5 +63,12 @@ export default {
 .router-link-login:hover {
   color: #111166;
   background-color: #e4eaf7;
+}
+
+.main-page-content {
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 </style>
