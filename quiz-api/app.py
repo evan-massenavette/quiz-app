@@ -118,7 +118,7 @@ def login():
 def delete_all_questions():
     # Check for admin auth
     jwt = request.headers.get('Authorization')
-    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+    if not auth.is_correctly_authenticated(jwt):
         return 'Unauthorized', 401
 
     # Delete all questions from database
@@ -137,7 +137,7 @@ def delete_all_questions():
 def delete_question(id: int):
     # Check for admin auth
     jwt = request.headers.get('Authorization')
-    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+    if not auth.is_correctly_authenticated(jwt):
         return 'Unauthorized', 401
 
     # Delete all questions from database
@@ -167,7 +167,9 @@ def shift_questions(database: Database, pos_range: range, pos_shift: int):
 @app.route('/questions/<int:id>', methods=['PUT'])
 def update_question(id: int):
     # Check for admin auth
-    # request.headers.get('Authorization')
+    jwt = request.headers.get('Authorization')
+    if not auth.is_correctly_authenticated(jwt):
+        return 'Unauthorized', 401
 
     # Check if id arg is valid
     if (id < 0):
@@ -238,7 +240,7 @@ def update_question(id: int):
 def add_question():
     # Check for admin auth
     jwt = request.headers.get('Authorization')
-    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+    if not auth.is_correctly_authenticated(jwt):
         return 'Unauthorized', 401
 
     # Read question in request
@@ -323,7 +325,7 @@ def add_participation():
 def delete_all_participations():
     # Check for admin auth
     jwt = request.headers.get('Authorization')
-    if (jwt is None or auth.is_correctly_authenticated(jwt)):
+    if not auth.is_correctly_authenticated(jwt):
         return 'Unauthorized', 401
 
     # Delete all questions from database
