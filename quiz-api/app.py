@@ -44,6 +44,7 @@ def get_quiz_info():
     try:
         size = database.get_questions_amount()
         scores = database.get_all_scores()
+        scores.sort(key=lambda x: x['score'], reverse=True)
     except Exception as e:
         return f'Error while requesting content: {e}', 500
     finally:
