@@ -194,7 +194,7 @@ def update_question(id: int):
     # Read question in request
     try:
         payload = dict(request.get_json())  # type: ignore
-        question = Question.from_json(payload)
+        question = Question.from_json(id, payload)
     except Exception as e:
         return f'Cannot read question: {e}', 400
 
@@ -262,7 +262,7 @@ def add_question():
     # Read question in request
     try:
         payload = dict(request.get_json())  # type: ignore
-        question = Question.from_json(payload)
+        question = Question.from_json(None, payload)
     except Exception as e:
         return f'Cannot read question: {e}', 400
 

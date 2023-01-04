@@ -92,14 +92,14 @@ class Database():
 
     def add_question(self, question: Question):
         self.cursor.execute('INSERT INTO Question (title, text, position, image, answer0, answer1, answer2, answer3, correct_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
-                            question.to_tuple())
+                            question.to_tuple()[1:])
         return self.cursor.lastrowid
 
     def update_question_from_id(self, question: Question, question_id: int) -> bool:
         """Returns True if it succeeds, otherwise returns False"""
         try:
             self.cursor.execute('UPDATE Question SET title = ?, text = ?, position = ?, image = ?, answer0 = ?, answer1 = ?, answer2 = ?, answer3 = ?, correct_answer = ? WHERE id=?;',
-                                question.to_tuple()+(question_id,))
+                                question.to_tuple()[1:]+(question_id,))
         except IndexError:
             return False
         return True
@@ -108,7 +108,7 @@ class Database():
         """Returns True if it succeeds, otherwise returns False"""
         try:
             self.cursor.execute('UPDATE Question SET title = ?, text = ?, position = ?, image = ?, answer0 = ?, answer1 = ?, answer2 = ?, answer3 = ?, correct_answer = ? WHERE position=?;',
-                                question.to_tuple()+(question_pos,))
+                                question.to_tuple()[1:]+(question_pos,))
         except IndexError:
             return False
         return True

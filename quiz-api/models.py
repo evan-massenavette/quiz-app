@@ -27,7 +27,8 @@ class Answer(JSONable):
 
 
 class Question(JSONable):
-    def __init__(self, title: str, text: str, position: int, image: str, possibleAnswers: list[Answer]):
+    def __init__(self, id: int | None, title: str, text: str, position: int, image: str, possibleAnswers: list[Answer]):
+        self.id = id
         self.title = title
         self.text = text
         self.position = position
@@ -35,10 +36,10 @@ class Question(JSONable):
         self.possibleAnswers = possibleAnswers
 
     @classmethod
-    def from_json(cls, json_obj: dict):
+    def from_json(cls, id: int | None, json_obj: dict):
         possibleAnswers = [Answer.from_json(
             answer_json) for answer_json in json_obj['possibleAnswers']]
-        return cls(json_obj['title'], json_obj['text'], int(json_obj['position']), json_obj['image'], possibleAnswers)
+        return cls(id, json_obj['title'], json_obj['text'], int(json_obj['position']), json_obj['image'], possibleAnswers)
 
     @classmethod
     def from_tuple(cls, question_tuple: tuple) -> Question:
@@ -47,6 +48,7 @@ class Question(JSONable):
             raise TypeError('Given question tuple cannot be None')
 
         # Get data from tuple
+        id = question_tuple[0]
         title = question_tuple[1]
         text = question_tuple[2]
         position = question_tuple[3]
@@ -64,7 +66,7 @@ class Question(JSONable):
                 Answer(answer_text, idx == correct_answer_idx))
 
         # Return the question
-        return cls(title, text, position, image, possible_answers_converted)
+        return cls(id, title, text, position, image, possible_answers_converted)
 
     def to_tuple(self) -> tuple:
         # Find correct answer for this question
@@ -84,6 +86,7 @@ class Question(JSONable):
             *possibleAnswersText, *[pad_value] * pad_size]
 
         return (
+            self.id,
             self.title,
             self.text,
             self.position,
