@@ -28,8 +28,8 @@ class Database():
             image TEXT NOT NULL,
             answer0 TEXT NOT NULL,
             answer1 INTEGER NOT NULL,
-            answer2 INTEGER NOT NULL,
-            answer3 INTEGER NOT NULL,
+            answer2 INTEGER,
+            answer3 INTEGER,
             correct_answer    INTEGER NOT NULL,
             PRIMARY KEY(id AUTOINCREMENT)
         )
