@@ -133,26 +133,6 @@ def delete_all_questions():
     return 'All content deleted', 204
 
 
-@app.route('/questions/<int:id>', methods=['DELETE'])
-def delete_question(id: int):
-    # Check for admin auth
-    jwt = request.headers.get('Authorization')
-    if not auth.is_correctly_authenticated(jwt):
-        return 'Unauthorized', 401
-
-    # Delete all questions from database
-    database = Database(DB_URL)
-    try:
-        if not database.delete_question(id):
-            return 'No existing content', 404
-    except Exception as e:
-        return f'Error while deleting content: {e}', 500
-    finally:
-        database.close()
-
-    return 'Content deleted', 204
-
-
 def shift_questions(database: Database, pos_range: range, pos_shift: int):
     pos_list = list(pos_range)
     if pos_shift > 0:
@@ -162,6 +142,42 @@ def shift_questions(database: Database, pos_range: range, pos_shift: int):
         question_to_change = database.get_question_from_pos(old_pos)
         question_to_change.position += pos_shift
         database.update_question_from_pos(question_to_change, old_pos)
+
+
+@app.route('/questions/<int:id>', methods=['DELETE'])
+def delete_question(id: int):
+    # Check for admin auth
+    jwt = request.headers.get('Authorization')
+    if not auth.is_correctly_authenticated(jwt):
+        return 'Unauthorized', 401
+
+    database = Database(DB_URL)
+
+    # Get required info from database
+    try:
+        question = database.get_question_from_id(id)
+    except ValueError:
+        return f'No existing question with id {id}', 404
+    max_position = database.get_max_position()
+
+    # Delete the question from the database
+    try:
+        database.delete_question(id)
+    except Exception as e:
+        database.close()
+        return f'Error while deleting content: {e}', 500
+
+    # Move down 1 position all the questions
+    # with higher position than the deleted question
+    try:
+        shift_questions(database, range(
+            question.position+1, max_position+1), -1)
+    except Exception as e:
+        print(f'Error: {e}')
+        database.close()
+        return f'Error while reordering questions: {e}', 500
+
+    return 'Content deleted', 204
 
 
 @app.route('/questions/<int:id>', methods=['PUT'])

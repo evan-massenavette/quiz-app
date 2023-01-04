@@ -113,10 +113,13 @@ class Database():
             return False
         return True
 
-    def delete_question(self, question_id: int) -> bool:
+    def delete_question(self, question_id: int):
+        """Deletes question with given id from the database. Raises a ValueError if no question with a matching id is found"""
         self.cursor.execute(
             'DELETE FROM Question WHERE id=?;', (question_id,))
-        return self.cursor.rowcount > 0
+        # Check if a question was deleted
+        if self.cursor.rowcount == 0:
+            raise ValueError(f'No question exists with id {question_id}')
 
     def delete_all_questions(self):
         self.cursor.execute('DELETE FROM Question;')
