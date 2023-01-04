@@ -67,4 +67,11 @@ export default {
   color: #111166;
   background-color: #e4eaf7;
 }
+
+.main-page-content {
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
 </style>
