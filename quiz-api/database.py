@@ -55,7 +55,10 @@ class Database():
 
     def get_max_position(self) -> int:
         res = self.cursor.execute('SELECT MAX(position) FROM Question;')
-        return res.fetchone()[0] or 0
+        max_position = res.fetchone()[0]
+        if max_position is None:
+            return 0
+        return int(max_position)
 
     def get_questions_amount(self) -> int:
         return self.cursor.execute('SELECT COUNT(*) FROM Question;').fetchone()[0]
