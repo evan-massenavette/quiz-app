@@ -127,7 +127,7 @@ class Database():
     # Queries on scores
     def get_all_scores(self) -> list[dict]:
         res = self.cursor.execute('SELECT * FROM Result;')
-        return [{'name': x.name, 'score': x.score} for x in res.fetchall()]
+        return [{'playerName': x[1], 'score': x[2]} for x in res.fetchall()]
 
     def set_score(self, name, score):
         self.cursor.execute(

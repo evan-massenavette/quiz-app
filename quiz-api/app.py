@@ -328,13 +328,13 @@ def add_participation():
         if len(questions) != len(answers):
             return 'Wrong number of answers', 400
         calculatedScore = score(questions, answers)
-        database.set_score(payload['name'], calculatedScore)
+        database.set_score(payload['playerName'], calculatedScore)
     except Exception as e:
         return f'Error while getting or setting content: {e}', 500
     finally:
         database.close()
 
-    return "Participation added", 200
+    return {'playerName': payload['playerName'], 'score': calculatedScore}, 200
 
 
 @app.route('/participations/all', methods=['DELETE'])
