@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card>
+    <v-card class="mx-auto my-12">
       <div class="card-content">
         <h1>Home page</h1>
         <div class="quiz-description">

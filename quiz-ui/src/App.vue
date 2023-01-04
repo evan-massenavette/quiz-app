@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <v-app>
-    <v-app-bar app height="60">
+    <v-app-bar>
       <template v-slot:prepend>
         <RouterLink class="router-link-home" to="/">
           <v-icon icon="mdi-home" />
@@ -14,13 +14,13 @@ import { RouterLink, RouterView } from 'vue-router'
       <v-spacer></v-spacer>
       <template v-slot:append>
         <RouterLink class="router-link-login" to="/login">
-          <v-icon icon="mdi-account" />
+          <v-icon icon="mdi-login-variant" />
           <p>Admin login</p>
         </RouterLink>
       </template>
     </v-app-bar>
 
-    <v-main class="main-page-content">
+    <v-main>
       <v-parallax src="/src/assets/Images/ivana-cajina-asuyh-_ZX54-unsplash.jpg">
         <RouterView />
       </v-parallax>
@@ -65,7 +65,8 @@ export default {
   background-color: #e4eaf7;
 }
 
-.main-page-content {
+.v-main {
+  top: 0px;
   left: 0px;
   position: fixed;
   width: 100%;
