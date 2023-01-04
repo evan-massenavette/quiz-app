@@ -191,15 +191,19 @@ def update_question(id: int):
     old_position = question_with_same_id.position
     new_position = question.position
 
-    # Check that old_position is in valid bounds
-    max_position = database.get_max_position()
-    if old_position > max_position:
-        database.close()
-        return f'Given position ({old_position}) is higher than maximum position ({max_position})', 500
+    if new_position == old_position:
+        database.update_question_from_id(question, id)
+        return 'Question updated', 204
 
-    # Move question out of the way to allow ofr shifting
+    # Check that new_position is in valid bounds
+    max_position = database.get_max_position()
+    if new_position > max_position:
+        database.close()
+        return f'Given position ({new_position}) is higher than maximum position ({max_position})', 500
+
+    # Move question out of the way to allow for shifting
     question.position = max_position+2
-    database.update_question_from_id(question, id)
+    res = database.update_question_from_id(question, id)
 
     # Question gets moved down in position : move others up in position
     if (new_position < old_position):
