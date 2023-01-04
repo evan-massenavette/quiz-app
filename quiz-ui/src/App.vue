@@ -20,13 +20,11 @@ import { RouterLink, RouterView } from 'vue-router'
       </template>
     </v-app-bar>
 
-    <v-main full-width>
-      <v-parallax src="src/assets/Images/ivana-cajina-asuyh-_ZX54-unsplash.jpg">
-        <v-container fluid>
-          <RouterView />
-        </v-container>
-      </v-parallax>
-    </v-main>
+    <v-parallax src="src/assets/Images/ivana-cajina-asuyh-_ZX54-unsplash.jpg">
+      <v-main full-width>
+        <RouterView />
+      </v-main>
+    </v-parallax>
 
     <v-footer app height="47" color="black">Juste un test du footer
     </v-footer>

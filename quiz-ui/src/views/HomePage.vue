@@ -1,13 +1,15 @@
 <template>
   <v-card>
     <h1>Home page</h1>
-    <p>Petite description du quiz pour savoir de quoi ça parle et donner envie d'y jouer</p>
+    <p>A little quiz about space and astronomy.</p>
 
-    <RouterLink to="/start-new-quiz-page">Démarrer le quiz !</RouterLink>
+    <RouterLink to="/start-new-quiz-page">Start the quiz now!</RouterLink>
 
-    <p>Top scores (ça ne s'affiche pas encore en dessous)</p>
-    <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
-      {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+    <div v-if="registeredScores && registeredScores.length>0">
+      <p>High scores</p>
+      <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
+        {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+      </div>
     </div>
   </v-card>
 </template>
@@ -24,7 +26,6 @@ export default {
   },
   async created() {
     this.registeredScores = await quizApiService.getQuizInfo().data;
-    console.log("Composant Home page 'created'");
   }
 };
 </script>

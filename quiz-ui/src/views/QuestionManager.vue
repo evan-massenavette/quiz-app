@@ -1,6 +1,8 @@
 <template>
-  <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h1>
-  <QuestionDisplay :question="currentQuestion" @click-on-answer="answerClickedHandler" />
+  <v-card>
+    <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h1>
+    <QuestionDisplay :question="currentQuestion" @click-on-answer="answerClickedHandler" />
+  </v-card>
 </template>
 
 <script>

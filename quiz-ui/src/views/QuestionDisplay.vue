@@ -1,5 +1,5 @@
 <template>
-    <h1>{{ question.questionTitle }}</h1>
+    <h2><b>{{ question.questionTitle }}</b></h2>
     <p>{{ question.questionText }}</p>
     <img v-if="question.image" :src="question.image" />
     <!--a v-for="(answer,index) in question.possibleAnswers" :key="answer" @click="$emit('answer-selected', index)">{{answer.text}}</a-->

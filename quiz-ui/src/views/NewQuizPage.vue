@@ -1,9 +1,11 @@
 <template>
-  <div class="about">
+  <v-card>
     <p>Saisissez votre nom :</p>
-    <input type="text" v-model="username" />
-    <button @click="launchNewQuiz">GO!</button>
-  </div>
+    <v-text-field label="Nom"
+      :rules="rules"
+      v-model="username" />
+    <v-btn @click="launchNewQuiz">GO!</v-btn>
+  </v-card>
 </template>
 
 <script>
@@ -13,7 +15,12 @@ export default {
   name: "NewQuizPage",
   data() {
     return {
+      form: false,
       username: '',
+      rules: [
+        value => !!value || 'Required',
+        value => (value && value.length >= 3) || 'At least 3 characters',
+      ],
     };
   },
   methods: {
@@ -24,12 +31,3 @@ export default {
   }
 };
 </script>
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
