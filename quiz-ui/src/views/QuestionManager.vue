@@ -4,6 +4,8 @@
       <div class="card-content"> <!--hérite du style de HomePage-->
         <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }} :</h1>
         <QuestionDisplay :question="currentQuestion" @answer-selected="answerClickedHandler" />
+        <v-btn :disabled="!canGoBack()" @click="goBack()" icon="mdi-arrow-collapse-left"></v-btn>
+        <v-btn :disabled="!canGoNext()" @click="goNext()" icon="mdi-arrow-collapse-right"></v-btn>
       </div>
     </v-card>
   </v-container>
@@ -35,8 +37,22 @@ export default {
     };
   },
   methods: {
+    canGoBack(){
+      return this.currentQuestionPosition>1
+    },
+    canGoNext(){
+      return this.answers[this.currentQuestionPosition-1]!==undefined
+    },
+    goBack(){
+      this.currentQuestionPosition--;
+      this.loadQuestionByPosition();
+    },
+    goNext(){
+      this.currentQuestionPosition++;
+      this.loadQuestionByPosition();
+    },
     async answerClickedHandler(answerIndex) {
-      this.answers.push(answerIndex);
+      this.answers[this.currentQuestionPosition-1]=answerIndex;
       this.currentQuestionPosition++;
       this.loadQuestionByPosition();
     },
@@ -48,6 +64,7 @@ export default {
       this.$router.push("/score")
     },
     async loadQuestionByPosition() {
+      console.log(this.answers)
       if(this.currentQuestionPosition<=this.totalNumberOfQuestion){
         const questionRequest = await QuizApiService.getQuestion(this.currentQuestionPosition);
         this.verifyCorrectness(questionRequest)
