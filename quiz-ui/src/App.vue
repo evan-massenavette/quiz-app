@@ -1,27 +1,14 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
+import Header from '@/views/Header.vue'
 </script>
 
 <template>
   <v-app>
-    <v-app-bar>
-      <template v-slot:prepend>
-        <RouterLink class="router-link-home" to="/">
-          <v-icon icon="mdi-home" />
-          <p>Home</p>
-        </RouterLink>
-      </template>
-      <v-spacer></v-spacer>
-      <template v-slot:append>
-        <RouterLink class="router-link-login" to="/login">
-          <v-icon icon="mdi-login-variant" />
-          <p>Admin login</p>
-        </RouterLink>
-      </template>
-    </v-app-bar>
+    <Header />
 
     <v-main>
-      <v-parallax src="/src/assets/Images/ivana-cajina-asuyh-_ZX54-unsplash.jpg">
+      <v-parallax src="src/assets/images/space_background.jpg">
         <RouterView />
       </v-parallax>
     </v-main>
@@ -34,36 +21,9 @@ export default {
 };
 </script>
 
+
 <style>
-.router-link-home {
-  display: inline-block;
-  width: 90px;
-  height: 50px;
-  color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.router-link-home:hover {
-  color: #111166;
-  background-color: #e4eaf7;
-}
-
-.router-link-login {
-  display: inline-block;
-  width: 130px;
-  height: 50px;
-  color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.router-link-login:hover {
-  color: #111166;
-  background-color: #e4eaf7;
-}
+@import '@/assets/main.css';
 
 .v-main {
   top: 0px;
