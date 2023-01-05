@@ -1,24 +1,22 @@
+<script setup>
+import ScoreTable from '@/views/ScoreTable.vue';
+</script >
+
 <template>
-  <v-container>
-    <v-card class="mx-auto my-12">
-      <div class="card-content">
-        <h1>Home page</h1>
-        <div class="quiz-description">
-          <p>Here is a little quiz on space and astronomy.</p>
-        </div>
-        <RouterLink class="router-link-quiz" to="/start-new-quiz-page">Start the quiz now!</RouterLink>
-      </div>
-    </v-card>
-    <v-card class="mx-auto my-12" v-if="registeredScores && registeredScores.length > 0">
-      <div class="card-content">
+  <v-container id="main_card_wrapper" class="d-flex">
+    <v-card id="main_card">
+      <h1>Space quiz !</h1>
+      <p>Here is a little quiz on space and astronomy.</p>
+      <v-btn id="goto_quiz_button" to="/start-new-quiz-page">
+        Start the quiz now!
+      </v-btn>
+      <v-container id="scores_container" v-if="true || registeredScores && registeredScores.length > 0">
         <h1>High scores</h1>
-        <div class="quiz-description">
-          <p>Look at the best entries.</p>
-        </div>
         <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
           {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
         </div>
-      </div>
+        <ScoreTable id="score_table" />
+      </v-container>
     </v-card>
   </v-container>
 </template>
@@ -39,30 +37,44 @@ export default {
 };
 </script>
 
-<style>
-.card-content {
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 10px;
-  margin-bottom: 20px;
+<style scoped>
+#main_card_wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-.quiz-description {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.router-link-quiz {
-  display: inline-block;
-  width: 150px;
-  height: 30px;
-  font-size: large;
-  color: hsl(228, 87%, 52%);
+#main_card {
+  padding: 10px 20px;
+  width: 800px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.router-link-quiz:hover {
-  background-color: white;
+#main_card h1 {
+  text-align: center;
+}
+
+#main_card p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#goto_quiz_button {
+  background-color: rgb(var(--v-theme-accent));
+  width: fit-content;
+}
+
+#scores_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+#score_table {
+  width: max(250px, min(500px, 80%));
 }
 </style>
