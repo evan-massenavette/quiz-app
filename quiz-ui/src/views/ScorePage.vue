@@ -1,3 +1,7 @@
+<script setup>
+import ScoreTable from '@/views/ScoreTable.vue';
+</script >
+
 <template>
   <v-container>
     <v-card class="mx-auto my-12">
@@ -9,12 +13,23 @@
           <p class="text-h5 text--primary"> Highest score: {{ highestScore }} / {{ totalScore }}</p>
         </v-card-text>
 
-        <v-divider></v-divider>
-
-        <v-btn-toggle v-model="toggle_exclusive">
-          <v-btn variant="outlined" mandatory>High scores</v-btn>
-          <v-btn variant="outlined">Your score</v-btn>
+        <v-btn-toggle v-model="toggle_one" shaped mandatory>
+          <v-btn variant="outlined" @click="buttonHighScore">High scores</v-btn>
+          <v-btn variant="outlined" @click="buttonYourScore">Your score</v-btn>
         </v-btn-toggle>
+
+        <v-card>
+          <v-card v-if="revealHighScore">
+            <v-container id="scores_container" v-if="true || registeredScores && registeredScores.length > 0">
+              <ScoreTable id="score_table" />
+            </v-container>
+          </v-card>
+          <v-expand-transition>
+            <v-card v-if="revealYourScore">
+              <p>Mettre le tableau 2</p>
+            </v-card>
+          </v-expand-transition>
+        </v-card>
       </div>
     </v-card>
   </v-container>
@@ -28,26 +43,42 @@ export default {
   name: "ScorePage",
   data() {
     return {
+      registeredScores: [],
       yourScore: 0,
       totalScore: 0,
-      registeredScores: [],
-      highestScore: 0
+      highestScore: 0,
+      toggle_one: 0,
+      revealHighScore: true,
+      revealYourScore: false
     };
   },
   async created() {
     const result = await QuizApiService.getQuizInfo()
-    if (!result.ok) {
+    if (result.status != 200) {
       throw Error('Error while getting quiz info')
     }
     this.registeredScores = result.data;
     this.totalScore = result.data.size;
+
+    this.getParticipantScore();
+    this.getHighestScore();
   },
-  async participantScore() {
-    this.yourScore = await participationStorageService.getParticipationScore();
-  },
-  async highestScore() {
-    const allScores = this.registeredScores.map(x => x[1]);
-    this.highestScore = allScores.reduce((a, b) => Math.max(a, b), -Infinity);
+  methods: {
+    async getParticipantScore() {
+      this.yourScore = await participationStorageService.getParticipationScore();
+    },
+    getHighestScore() {
+      const allScores = this.registeredScores.map(x => x[1]);
+      this.highestScore = allScores.reduce((a, b) => Math.max(a, b), -Infinity);
+    },
+    buttonHighScore() {
+      this.revealHighScore = true;
+      this.revealYourScore = false;
+    },
+    buttonYourScore() {
+      this.revealHighScore = false;
+      this.revealYourScore = true;
+    }
   }
 };
 </script>
