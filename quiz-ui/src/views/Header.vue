@@ -10,6 +10,8 @@ import { RouterLink } from 'vue-router'
     </RouterLink>
     <v-divider vertical class="header_divider" />
     <v-spacer />
+    <v-img src="src/assets/images/logo.svg" />
+    <v-spacer />
     <v-divider vertical class="header_divider" />
     <RouterLink class="header_link" to="/login">
       <v-icon icon="mdi-login-variant" />
