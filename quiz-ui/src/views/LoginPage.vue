@@ -33,6 +33,7 @@ export default {
       this.loading = true
       console.log("fonction login a rajouté ici")
       this.loading=false
+      this.$router.push('/administration');
     },
     required(v) {
       return !!v || 'Required'

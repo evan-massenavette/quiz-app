@@ -9,11 +9,15 @@
         <RouterLink class="router-link-quiz" to="/start-new-quiz-page">Start the quiz now!</RouterLink>
       </div>
     </v-card>
-    <v-card v-if="registeredScores && registeredScores.length > 0">
-      <h1>High scores</h1>
-      <p>Look at the best entries.</p>
-      <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
-        {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+    <v-card class="mx-auto my-12" v-if="registeredScores && registeredScores.length > 0">
+      <div class="card-content">
+        <h1>High scores</h1>
+        <div class="quiz-description">
+          <p>Look at the best entries.</p>
+        </div>
+        <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
+          {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
+        </div>
       </div>
     </v-card>
   </v-container>
