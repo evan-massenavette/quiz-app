@@ -2,14 +2,13 @@
   <v-card>
     <h1>Home page</h1>
     <p>A little quiz about space and astronomy.</p>
-
     <RouterLink to="/start-new-quiz-page">Start the quiz now!</RouterLink>
-
-    <div v-if="registeredScores && registeredScores.length>0">
-      <p>High scores</p>
-      <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
-        {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-      </div>
+  </v-card>
+  <v-card v-if="registeredScores && registeredScores.length>0">
+    <h1>High scores</h1>
+    <p>Look at the best entries.</p>
+    <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
+      {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
     </div>
   </v-card>
 </template>
