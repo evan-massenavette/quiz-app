@@ -1,11 +1,12 @@
 <template>
   <v-container>
-    <v-card class="mx-auto my-12">
+    <v-card loading class="mx-auto my-12">
       <div class="card-content"> <!--hérite du style de HomePage-->
         <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }} :</h1>
-        <QuestionDisplay :question="currentQuestion" @answer-selected="answerClickedHandler" />
-        <v-btn :disabled="!canGoBack()" @click="goBack()" icon="mdi-arrow-collapse-left"></v-btn>
-        <v-btn :disabled="!canGoNext()" @click="goNext()" icon="mdi-arrow-collapse-right"></v-btn>
+        <QuestionDisplay :loading="loading" :question="currentQuestion" :currentAnswer="answers[currentQuestionPosition-1]" @answer-selected="answerClickedHandler" />
+        <v-btn :disabled="loading || !canGoBack()" @click="goBack()" icon="mdi-arrow-collapse-left"></v-btn>
+        <v-btn :disabled="loading || !canGoNext()" @click="goNext()" icon="mdi-arrow-collapse-right"></v-btn>
+        <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
       </div>
     </v-card>
   </v-container>
@@ -33,7 +34,8 @@ export default {
       currentQuestion: {"text": "", "title": "", "image": "", possibleAnswers:[]},
       currentQuestionPosition: 1,
       totalNumberOfQuestion: 0,
-      answers: []
+      answers: [],
+      loading: false
     };
   },
   methods: {
@@ -43,18 +45,26 @@ export default {
     canGoNext(){
       return this.answers[this.currentQuestionPosition-1]!==undefined
     },
-    goBack(){
+    async goBack(){
+      this.loading=true
       this.currentQuestionPosition--;
-      this.loadQuestionByPosition();
+      await this.loadQuestionByPosition();
+      this.loading=false
     },
-    goNext(){
-      this.currentQuestionPosition++;
-      this.loadQuestionByPosition();
+    async goNext(){
+      this.loading=true
+      if (this.currentQuestionPosition===this.totalNumberOfQuestion){ // End if it's the end 
+        await this.endQuiz()
+      }
+      else{ // If not go to the next question
+        this.currentQuestionPosition++;
+        await this.loadQuestionByPosition();
+      }
+      this.loading=false
     },
     async answerClickedHandler(answerIndex) {
       this.answers[this.currentQuestionPosition-1]=answerIndex;
-      this.currentQuestionPosition++;
-      this.loadQuestionByPosition();
+      this.goNext();
     },
     async endQuiz() {
       const postScoreRequest = await QuizApiService.postScore(ParticipationStorageService.getPlayerName(), this.answers)
@@ -64,19 +74,14 @@ export default {
       this.$router.push("/score")
     },
     async loadQuestionByPosition() {
-      console.log(this.answers)
-      if(this.currentQuestionPosition<=this.totalNumberOfQuestion){
+      if(this.currentQuestionPosition<=this.totalNumberOfQuestion && this.currentQuestionPosition>0){ // Load question if it's possible
         const questionRequest = await QuizApiService.getQuestion(this.currentQuestionPosition);
         this.verifyCorrectness(questionRequest)
         this.currentQuestion=questionRequest.data
       }
-      else{
-        this.endQuiz()
-      }
-      
     },
     manageError(status){
-      this.$router.push(`/error/${status}`) 
+      this.$router.push(`/error`) 
     },
     verifyCorrectness(request){
       const status=request.status
