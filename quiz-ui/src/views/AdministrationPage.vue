@@ -1,5 +1,7 @@
 <template>
-  <v-card>
-    <h1>Administration Page</h1>
-  </v-card>
+  <v-container>
+    <v-card class="mx-auto my-12">
+      <v-card-title>Administration Page</v-card-title>
+    </v-card>
+  </v-container>
 </template>
