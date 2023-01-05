@@ -12,9 +12,6 @@ import ScoreTable from '@/views/ScoreTable.vue';
       </v-btn>
       <v-container id="scores_container" v-if="true || registeredScores && registeredScores.length > 0">
         <h1>High scores</h1>
-        <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
-          {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-        </div>
         <ScoreTable id="score_table" />
       </v-container>
     </v-card>
@@ -32,7 +29,7 @@ export default {
     };
   },
   async created() {
-    this.registeredScores = await quizApiService.getQuizInfo().data;
+    this.registeredScores = await quizApiService.getQuizInfo();
   }
 };
 </script>
