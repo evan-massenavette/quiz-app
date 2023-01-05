@@ -36,6 +36,7 @@ export default {
     launchNewQuiz() {
       if (!this.form) return
       this.loading=true
+      participationStorageService.clear();
       participationStorageService.savePlayerName(this.username);
       this.loading=false
       this.$router.push('/questions');
