@@ -1,16 +1,21 @@
+<script setup>
+import ScoreTable from '@/views/ScoreTable.vue';
+</script >
+
 <template>
-  <v-container id="main_card_wrapper">
+  <v-container id="main_card_wrapper" class="d-flex">
     <v-card id="main_card">
       <h1>Space quiz !</h1>
       <p>Here is a little quiz on space and astronomy.</p>
-      <v-btn id="goto_quiz_button" to="/start-new-quiz-page" ripple="false">
+      <v-btn id="goto_quiz_button" to="/start-new-quiz-page">
         Start the quiz now!
       </v-btn>
-      <v-container v-if="true || registeredScores && registeredScores.length > 0">
+      <v-container id="scores_container" v-if="true || registeredScores && registeredScores.length > 0">
         <h1>High scores</h1>
         <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
           {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
         </div>
+        <ScoreTable id="score_table" />
       </v-container>
     </v-card>
   </v-container>
@@ -24,48 +29,6 @@ export default {
   data() {
     return {
       registeredScores: [],
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-        },
-      ]
     };
   },
   async created() {
@@ -102,5 +65,17 @@ export default {
 #goto_quiz_button {
   background-color: rgb(var(--v-theme-accent));
   width: fit-content;
+}
+
+#scores_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: ;
+}
+
+#score_table {
+  width: max(250px, min(500px, 80%));
 }
 </style>
