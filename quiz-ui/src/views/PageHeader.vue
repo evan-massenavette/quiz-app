@@ -68,7 +68,7 @@ export default {
     }
   },
   methods: {
-    loginCallback(username) {
+    loginCallback() {
       this.loggedIn = true;
     },
     logout() {

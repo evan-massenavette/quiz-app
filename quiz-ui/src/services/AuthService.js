@@ -15,7 +15,7 @@ function updateAuthStatus() {
     return;
   }
   try {
-    const decoded = jose.decodeJwt(token);
+    jose.decodeJwt(token);
   }
   catch {
     _isAuthenticated = false;
@@ -56,7 +56,7 @@ async function login(password) {
   // Success
   StorageService.saveToken(token)
   _isAuthenticated = true;
-  _loginCallback(decoded.sub);
+  _loginCallback();
   console.info('Successfully logged in')
 
   return decoded.sub;
