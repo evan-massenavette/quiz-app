@@ -1,5 +1,5 @@
 <script setup>
-import ScoreTable from '@/views/ScoreTable.vue';
+import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
 </script>
 
 <template>

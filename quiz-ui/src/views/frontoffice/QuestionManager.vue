@@ -26,7 +26,7 @@
 <script>
 import QuizApiService from '@/services/QuizApiService';
 import StorageService from '@/services/StorageService';
-import QuestionDisplay from './QuestionDisplay.vue';
+import QuestionDisplay from '@/views/frontoffice/QuestionDisplay.vue';
 
 export default {
   components: {

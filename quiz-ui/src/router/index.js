@@ -6,17 +6,17 @@ const router = createRouter({
     {
       path: '/',
       name: 'HomePage',
-      component: () => import('@/views/HomePage.vue')
+      component: () => import('@/views/frontoffice/HomePage.vue')
     },
     {
       path: '/start-new-quiz',
       name: 'NewQuizPage',
-      component: () => import('@/views/NewQuizPage.vue')
+      component: () => import('@/views/frontoffice/NewQuizPage.vue')
     },
     {
       path: '/questions',
       name: 'QuestionsPage',
-      component: () => import('@/views/QuestionManager.vue')
+      component: () => import('@/views/frontoffice/QuestionManager.vue')
     },
     {
       path: '/administration',
@@ -26,12 +26,12 @@ const router = createRouter({
     {
       path: '/login',
       name: 'LoginPage',
-      component: () => import('@/views/LoginPage.vue')
+      component: () => import('@/views/frontoffice/LoginPage.vue')
     },
     {
       path: '/score',
       name: 'ScorePage',
-      component: () => import('@/views/ScorePage.vue')
+      component: () => import('@/views/frontoffice/ScorePage.vue')
     }
   ]
 })

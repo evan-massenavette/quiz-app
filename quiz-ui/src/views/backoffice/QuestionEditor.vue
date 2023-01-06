@@ -79,7 +79,7 @@
 </style>
 
 <script>
-import ImageUpload from './ImageUpload.vue';
+import ImageUpload from '@/views/backoffice/ImageUpload.vue';
 
 export default {
   components: { ImageUpload },
