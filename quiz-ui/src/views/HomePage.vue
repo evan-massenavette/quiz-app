@@ -3,7 +3,7 @@ import ScoreTable from '@/views/ScoreTable.vue';
 </script >
 
 <template>
-  <v-container id="main_card_wrapper">
+  <v-container id="main_card_wrapper" fluid>
     <v-card id="main_card">
       <h1>Space quiz !</h1>
       <p>Here is a little quiz on space and astronomy.</p>
