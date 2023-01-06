@@ -34,6 +34,9 @@ export default {
   getQuestion(position) {
     return this.call("get", `questions?position=${position}`);
   },
+  getAllQuestions() {
+    return this.call("get", "questions/all")
+  },
   postScore(playerName, answers) {
     const body = { playerName, answers }
     return this.call("post", "participations", body)

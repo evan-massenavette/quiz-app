@@ -30,13 +30,9 @@ export default {
     async loadQuestions(){
       this.questions=[]
       try {
-          const quizInfoRequest = await QuizApiService.getQuizInfo();
-          this.size = quizInfoRequest.data.size;
-          for (let i = 1; i <= this.size; i++) {
-              let questionRequest = await QuizApiService.getQuestion(i);
-              let question = questionRequest.data;
-              this.questions[i-1]=question;
-          }
+          const questionsRequest = await QuizApiService.getAllQuestions()
+          this.questions = questionsRequest.data
+          this.size = this.questions.length
       }
       catch (e) {
           console.error(e);
