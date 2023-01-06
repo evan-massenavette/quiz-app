@@ -5,23 +5,33 @@ import AuthService from '@/services/AuthService';
 
 <template>
   <v-app-bar height="50" color="surface">
+
     <RouterLink class="header_button" to="/">
       <v-icon icon="mdi-home" />
       <p>Home</p>
     </RouterLink>
     <v-divider vertical class="header_divider" />
+
     <v-spacer />
     <v-img src="src/assets/images/logo.svg" />
     <v-spacer />
+
     <v-divider vertical class="header_divider" />
-    <RouterLink to="/login" class="header_button" v-if="!loggedIn">
-      <v-icon icon="mdi-login-variant" />
-      <p>Admin Login</p>
+    <RouterLink to="/administration" class="header_button" v-if="loggedIn">
+      <v-icon icon="mdi-lead-pencil" />
+      <p>Edit Quiz</p>
     </RouterLink>
+
+    <v-divider vertical class="header_divider" />
     <RouterLink to="/login" class="header_button" v-if="loggedIn" @click="logout()">
       <v-icon icon="mdi-login-variant" />
       <p>Admin Logout</p>
     </RouterLink>
+    <RouterLink to="/login" class="header_button" v-if="!loggedIn">
+      <v-icon icon="mdi-login-variant" />
+      <p>Admin Login</p>
+    </RouterLink>
+
   </v-app-bar>
 </template>
 
