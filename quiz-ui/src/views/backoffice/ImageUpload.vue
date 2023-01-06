@@ -1,6 +1,6 @@
 <template>
   <v-file-input label="Image" @change="fileChange" @click:clear="clickRemoveImageHandler" :disabled="isSaving"
-    :rules="[weight]" accept="image/jpeg, image/png, image/gif" prepend-icon="mdi-camera"></v-file-input>
+    :rules="[weight]" accept="image/jpeg, image/png, image/gif" prepend-icon="mdi-image"></v-file-input>
 </template>
 
 <script>

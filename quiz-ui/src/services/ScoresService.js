@@ -41,7 +41,7 @@ function getScoresNearYou(registeredScores) {
   const yourIndex = registeredScores.findIndex(p => p.playerName === playerName && p.score == yourHighestScore);
 
   // return registeredScores.slice(yourIndex - 5, yourIndex + 5);
-  const range = 2
+  const range = 5
   return registeredScores.slice(
     Math.max(0, yourIndex - range),
     Math.min(registeredScores.length, yourIndex + range)
