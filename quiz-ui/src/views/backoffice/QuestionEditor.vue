@@ -8,7 +8,6 @@
         </v-card-title>
 
         <v-card-text>
-          <v-icon icon="mdi-vuetify"></v-icon>
           <img :src="question.image"/>
           <ImageUpload @file-change="imageFileChangedHandler"/>
           <v-text-field prepend-icon="mdi-form-textbox" type="text" label="Text" clearable placeholder="Enter the text"

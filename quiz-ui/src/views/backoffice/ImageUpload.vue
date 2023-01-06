@@ -1,20 +1,13 @@
 <template>
-  <input
-    tabindex="-1"
-    type="file"
-    name="uploadInput"
-    :disabled="isSaving"
+  <v-file-input
+    label="Image"
     @change="fileChange"
+    @click:clear="clickRemoveImageHandler"
+    :disabled="isSaving"
+    :rules="[weight]"
     accept="image/jpeg, image/png, image/gif"
-    class="input-file"
-    ref="fileInput"
-  />
-  <a class="image-upload-remove-link" 
-		 href="#" 
-		 v-if="file" 
-		 @click="clickRemoveImageHandler">
-			Supprimer l'image
-  </a>
+    prepend-icon="mdi-camera"
+  ></v-file-input>
 </template>
 <script>
 export default {
@@ -23,13 +16,10 @@ export default {
     return {
       isSaving: false,
       fileReader: null,
-      fileInput: null,
-      file: null
     };
   },
   props: {},
   mounted() {
-    this.fileInput = this.$refs.fileInput;
     this.fileReader = new FileReader();
     this.fileReader.addEventListener(
       "load",
@@ -53,18 +43,11 @@ export default {
       this.fileReader.readAsDataURL(this.file);
     },
     clickRemoveImageHandler() {
-      this.file = null;
       this.$emit("file-change", "");
-      if (this.fileInput) {
-        this.fileInput.value = "";
-      }
+    },
+    weight(value) {
+      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
     }
   }
 };
 </script>
-
-<style>
-.image-upload-remove-link {
-  display: block;
-}
-</style>

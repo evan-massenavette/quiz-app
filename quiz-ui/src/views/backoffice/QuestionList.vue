@@ -37,7 +37,6 @@ export default {
               let question = questionRequest.data;
               this.questions[i-1]=question;
           }
-          console.log(this.questions);
       }
       catch (e) {
           console.error(e);
