@@ -6,43 +6,48 @@ import ScoreTable from '@/views/ScoreTable.vue';
   <v-container id="main_card_wrapper" fluid>
     <v-card id="main_card">
       <h1>Space quiz !</h1>
-      <p>Here is a little quiz on space and astronomy.</p>
+      <p>
+        Here is a little quiz on space and astronomy !
+        How many can you get right out of {{ this.questionsAmount }} ?
+      </p>
       <v-btn to="/start-new-quiz" color="accent">
         Start the quiz now!
       </v-btn>
-      <v-container id="scores_container" class="d-flex flex-column align-center"
-        v-if="true || registeredScores && registeredScores.length > 0">
-        <h1>High scores</h1>
-        <ScoreTable id="score_table" />
+      <v-container class="d-flex flex-column align-center" v-if="true || highestScores && highestScores.length > 0">
+        <h1>Highest Scores</h1>
+        <ScoreTable :scores-and-ranks="this.highestScores" class="score_table_size" />
       </v-container>
     </v-card>
   </v-container>
 </template>
 
 <script>
-import quizApiService from "@/services/QuizApiService";
+import QuizApiService from "@/services/QuizApiService";
+import ScoresService from '@/services/ScoresService';
 
 export default {
   name: "HomePage",
   data() {
     return {
-      registeredScores: [],
+      highestScores: [],
+      questionsAmount: 0,
     };
   },
   async created() {
-    // Get quioz info
-    const response = await quizApiService.getQuizInfo();
+    // Get quiz info
+    const response = await QuizApiService.getQuizInfo();
     if (response === undefined) {
       console.error(`HomePage: Could not get quiz info`)
       return
     }
-    this.registeredScores = response.data;
+
+    // Extract data from quiz info
+    this.questionsAmount = response.data.size;
+    this.highestScores = response.data.scores;
+
+    // Get the highest scores and add rank for each particiation
+    ScoresService.sort(this.highestScores);
+    ScoresService.addRanks(this.highestScores);
   }
 };
 </script>
-
-<style scoped>
-#score_table {
-  width: max(250px, min(500px, 80%));
-}
-</style>
