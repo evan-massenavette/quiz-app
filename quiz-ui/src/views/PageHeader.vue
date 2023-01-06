@@ -1,7 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import AuthService from '@/services/AuthService';
-import { def } from '@vue/shared';
 </script>
 
 <template>
