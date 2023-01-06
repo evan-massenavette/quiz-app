@@ -29,7 +29,13 @@ export default {
     };
   },
   async created() {
-    this.registeredScores = await quizApiService.getQuizInfo();
+    const response = await quizApiService.getQuizInfo();
+    if (response === undefined) {
+      console.error(`HomePage: Could not get quiz info`)
+      return
+    }
+    this.registeredScores = response.data;
+
   }
 };
 </script>

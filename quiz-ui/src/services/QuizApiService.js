@@ -24,7 +24,7 @@ export default {
         return { status: response.status, data: response.data };
       })
       .catch((error) => {
-        console.error(error);
+        console.error(`Error on ${method.toUpperCase()} to ${resource}`, error);
       });
   },
   // Front office
