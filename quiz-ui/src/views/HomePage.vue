@@ -8,14 +8,14 @@ import ScoreTable from '@/views/ScoreTable.vue';
       <h1>Space quiz !</h1>
       <p>
         Here is a little quiz on space and astronomy !
-        How many can you get right out of {{ this.questionsAmount }} ?
+        How many can you get right out of {{ questionsAmount }} ?
       </p>
       <v-btn to="/start-new-quiz" color="accent">
         Start the quiz now!
       </v-btn>
       <v-container class="d-flex flex-column align-center" v-if="highestScores && highestScores.length > 0">
         <h1>Highest Scores</h1>
-        <ScoreTable :scores-and-ranks="this.highestScores" class="score_table_size" />
+        <ScoreTable :scores-and-ranks="highestScores" class="score_table_size" />
       </v-container>
     </v-card>
   </v-container>
