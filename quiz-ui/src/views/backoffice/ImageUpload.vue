@@ -1,14 +1,8 @@
 <template>
-  <v-file-input
-    label="Image"
-    @change="fileChange"
-    @click:clear="clickRemoveImageHandler"
-    :disabled="isSaving"
-    :rules="[weight]"
-    accept="image/jpeg, image/png, image/gif"
-    prepend-icon="mdi-camera"
-  ></v-file-input>
+  <v-file-input label="Image" @change="fileChange" @click:clear="clickRemoveImageHandler" :disabled="isSaving"
+    :rules="[weight]" accept="image/jpeg, image/png, image/gif" prepend-icon="mdi-camera"></v-file-input>
 </template>
+
 <script>
 export default {
   emits: ["file-change"],
