@@ -2,20 +2,16 @@
   <v-container>
     <v-card class="mx-auto my-12">
       <v-card-title>Administration Page</v-card-title>
-      <QuestionList/>
+      <QuestionList />
     </v-card>
   </v-container>
 </template>
 <script>
-import StorageService from '@/services/StorageService';
-import QuestionList from './QuestionList.vue';
+import AuthService from '@/services/AuthService';
+
 export default {
-  components: { QuestionList },
-  beforeCreate(){
-    const token = StorageService.getToken()
-    if (!token){
-      this.$router.push("/login")
-    }
+  beforeCreate() {
+    if (!AuthService.isAuthenticated()) this.$router.push('/login')
   },
 }
 </script>

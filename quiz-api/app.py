@@ -239,7 +239,10 @@ def update_question(id: int):
     max_position = database.get_max_position()
     if new_position > max_position:
         database.close()
-        return f'Given position ({new_position}) is higher than maximum position ({max_position})', 500
+        return f'Invalid position: {new_position} is higher than maximum position of {max_position}', 500
+    if new_position < 1:
+        database.close()
+        return f'Invalid position: {new_position} (must be at least 1)', 500
 
     # Move question out of the way to allow for shifting
     question.position = max_position+2

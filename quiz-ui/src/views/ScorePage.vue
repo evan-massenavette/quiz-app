@@ -1,106 +1,78 @@
 <script setup>
 import ScoreTable from '@/views/ScoreTable.vue';
-</script >
+</script>
 
 <template>
-  <v-container>
-    <v-card class="mx-auto my-12">
-      <div class="card-score-content">
-        <v-card-title class="card-score-title">Score Page</v-card-title>
+  <v-container id="main_card_wrapper">
+    <v-card id="main_card">
+      <h1>Actual score: {{ yourScore }} / {{ questionsAmount }}</h1>
+      <h3>Highest score: {{ yourHighestScore }} / {{ questionsAmount }}</h3>
 
-        <v-card-text>
-          <p class="text-h3 text--primary">Actual score: {{ yourScore }} / {{ totalScore }}</p>
-          <p class="text-h5 text--primary"> Highest score: {{ highestScore }} / {{ totalScore }}</p>
-        </v-card-text>
+      <div class="score_table_size mt-5">
+        <v-tabs v-model="scoresTab" fixed-tabs color="accent" bg-color="surface-lighten-1" density="comfortable">
+          <v-tab key="highest_scores">Highest Scores</v-tab>
+          <v-tab key="your_best_score">Your Best Score</v-tab>
+        </v-tabs>
 
-        <v-btn-toggle v-model="toggle_one" shaped mandatory>
-          <v-btn variant="outlined" @click="buttonHighScore">High scores</v-btn>
-          <v-btn variant="outlined" @click="buttonYourScore">Your score</v-btn>
-        </v-btn-toggle>
-
-        <v-card>
-          <v-card v-if="revealHighScore">
-            <v-container id="scores_container" v-if="true || registeredScores && registeredScores.length > 0">
-              <ScoreTable id="score_table" />
-            </v-container>
-          </v-card>
-          <v-expand-transition>
-            <v-card v-if="revealYourScore">
-              <p>Mettre le tableau 2</p>
-            </v-card>
-          </v-expand-transition>
-        </v-card>
+        <v-window v-model="scoresTab">
+          <v-window-item key="highest_scores">
+            <ScoreTable :scores-and-ranks="highestScores" />
+          </v-window-item>
+          <v-window-item key="your_best_score">
+            <ScoreTable :scores-and-ranks="scoresNearYou" :highlighted-rank="yourRank" />
+          </v-window-item>
+        </v-window>
       </div>
+
     </v-card>
   </v-container>
 </template>
 
+<style scoped>
+.score_table {
+  margin: 0 auto;
+}
+</style>
+
 <script>
 import QuizApiService from '@/services/QuizApiService';
-import StorageService from "@/services/StorageService";
+import ScoresService from '@/services/ScoresService';
 
 export default {
   name: "ScorePage",
   data() {
     return {
-      registeredScores: [],
       yourScore: 0,
-      totalScore: 0,
-      highestScore: 0,
-      toggle_one: 0,
-      revealHighScore: true,
-      revealYourScore: false
+      yourHighestScore: 0,
+      yourRank: 0,
+      highestScores: [],
+      scoresNearYou: [],
+      questionsAmount: 0,
+      scoresTab: null,
     };
   },
   async created() {
-    const result = await QuizApiService.getQuizInfo()
-    if (result.status != 200) {
-      throw Error('Error while getting quiz info')
+    // Get quiz info
+    const response = await QuizApiService.getQuizInfo()
+    if (response === undefined) {
+      console.error(`HomePage: Could not get quiz info`)
+      return
     }
-    this.registeredScores = result.data;
-    this.totalScore = result.data.size;
+    this.registeredScores = response.data.scores;
+    this.questionsAmount = response.data.size;
 
-    this.getParticipantScore();
-    this.getHighestScore();
+    // Convert scores to appropriate form (sort and add ranks)
+    ScoresService.sort(this.registeredScores);
+    ScoresService.addRanks(this.registeredScores);
+
+    // Get info for current user
+    this.yourScore = ScoresService.getYourScore();
+    this.yourHighestScore = ScoresService.getYourHighestScore(this.registeredScores);
+    this.yourRank = ScoresService.getYourRank(this.registeredScores);
+
+    // Get scores for tables
+    this.highestScores = ScoresService.getHighestScores(this.registeredScores);
+    this.scoresNearYou = ScoresService.getScoresNearYou(this.registeredScores);
   },
-  methods: {
-    async getParticipantScore() {
-      this.yourScore = await StorageService.getParticipationScore();
-    },
-    getHighestScore() {
-      const allScores = this.registeredScores.map(x => x[1]);
-      this.highestScore = allScores.reduce((a, b) => Math.max(a, b), -Infinity);
-    },
-    buttonHighScore() {
-      this.revealHighScore = true;
-      this.revealYourScore = false;
-    },
-    buttonYourScore() {
-      this.revealHighScore = false;
-      this.revealYourScore = true;
-    }
-  }
 };
 </script>
-
-<style>
-.card-score-content {
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.card-score-title {
-  font-size: x-large;
-}
-
-.text-h3 {
-  text-align: center;
-}
-
-.text-h5 {
-  text-align: center;
-  margin: 20px;
-}
-</style>
