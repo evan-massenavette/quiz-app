@@ -39,10 +39,12 @@ export default {
     async login() {
       if (!this.form) return
       this.loading = true
-      const token = await QuizApiService.login(this.password)
-      StorageService.saveToken(token)
+      const tokenRequest = await QuizApiService.login(this.password)
+      if (tokenRequest.status===200){
+        StorageService.saveToken(tokenRequest.data.token)
+        this.$router.push('/administration');
+      }
       this.loading=false
-      this.$router.push('/administration');
     },
     required(v) {
       return !!v || 'Required'
