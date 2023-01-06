@@ -37,7 +37,7 @@ import ScoreTable from '@/views/ScoreTable.vue';
 
 <script>
 import QuizApiService from '@/services/QuizApiService';
-import participationStorageService from "@/services/ParticipationStorageService";
+import StorageService from "@/services/StorageService";
 
 export default {
   name: "ScorePage",
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     async getParticipantScore() {
-      this.yourScore = await participationStorageService.getParticipationScore();
+      this.yourScore = await StorageService.getParticipationScore();
     },
     getHighestScore() {
       const allScores = this.registeredScores.map(x => x[1]);

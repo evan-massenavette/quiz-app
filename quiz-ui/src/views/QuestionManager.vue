@@ -71,7 +71,7 @@ export default {
       const postScoreRequest = await QuizApiService.postScore(StorageService.getPlayerName(), this.answers)
       this.verifyCorrectness(postScoreRequest)
       const score = postScoreRequest.data.score
-      ParticipationStorageService.saveParticipationScore(score)
+      StorageService.saveParticipationScore(score)
       this.$router.push("/score")
     },
     async loadQuestionByPosition() {
