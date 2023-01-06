@@ -40,7 +40,7 @@ export default {
       if (!this.form) return
       this.loading = true
       const tokenRequest = await QuizApiService.login(this.password)
-      if (tokenRequest.status===200){
+      if (tokenRequest && tokenRequest.status===200){
         StorageService.saveToken(tokenRequest.data.token)
         this.$router.push('/administration');
       }
