@@ -1,10 +1,12 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import AuthService from '@/services/AuthService';
+import { def } from '@vue/shared';
 </script>
 
 <template>
-  <v-app-bar id="header" height="50">
-    <RouterLink class="header_link" to="/">
+  <v-app-bar height="50" color="surface">
+    <RouterLink class="header_button" to="/">
       <v-icon icon="mdi-home" />
       <p>Home</p>
     </RouterLink>
@@ -13,29 +15,32 @@ import { RouterLink } from 'vue-router'
     <v-img src="src/assets/images/logo.svg" />
     <v-spacer />
     <v-divider vertical class="header_divider" />
-    <RouterLink class="header_link" to="/login">
+    <RouterLink to="/login" class="header_button" v-if="!loggedIn">
       <v-icon icon="mdi-login-variant" />
-      <p>Admin login</p>
+      <p>Admin Login</p>
+    </RouterLink>
+    <RouterLink to="/login" class="header_button" v-if="loggedIn" @click="logout()">
+      <v-icon icon="mdi-login-variant" />
+      <p>Admin Logout</p>
     </RouterLink>
   </v-app-bar>
 </template>
 
 <style scoped>
-#header {
-  padding: 0;
-  background-color: rgb(var(--v-theme-surface));
-}
-
-.header_link {
+.header_button {
   height: 100%;
   color: rgb(var(--v-theme-text-surface));
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
-.header_link:hover {
+.header_button>p {
+  margin-left: 5px;
+}
+
+.header_button:hover {
   color: rgb(var(--v-theme-accent));
   background-color: rgb(var(--v-theme-surface-darken-1));
 }
@@ -44,3 +49,29 @@ import { RouterLink } from 'vue-router'
   background-color: rgb(var(--v-theme-surface-lighten-1));
 }
 </style>
+
+<script>
+export default {
+  name: 'PageHeader',
+  data() {
+    return {
+      loggedIn: false,
+    }
+  },
+  methods: {
+    loginCallback(username) {
+      this.loggedIn = true;
+    },
+    logout() {
+      this.loggedIn = false;
+      AuthService.logout();
+      this.$router.push('/')
+    },
+  },
+  created() {
+    // Register login callback
+    AuthService.setLoginCallback(this.loginCallback)
+  },
+
+}
+</script>
