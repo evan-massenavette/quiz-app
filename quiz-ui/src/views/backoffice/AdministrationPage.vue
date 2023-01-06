@@ -1,11 +1,16 @@
+<script setup>
+import QuestionList from '@/views/backoffice/QuestionList.vue'
+</script>
+
 <template>
-  <v-container>
-    <v-card class="mx-auto my-12">
-      <v-card-title>Administration Page</v-card-title>
+  <v-container id="main_card_wrapper">
+    <v-card id="main_card">
+      <h1>Administration Page</h1>
       <QuestionList />
     </v-card>
   </v-container>
 </template>
+
 <script>
 import AuthService from '@/services/AuthService';
 
