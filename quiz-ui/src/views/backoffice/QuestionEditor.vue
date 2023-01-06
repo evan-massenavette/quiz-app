@@ -9,7 +9,7 @@
             placeholder="Enter the title" :rules="[required]" :disabled="loading" v-model="question.title" />
         </v-card-title>
 
-        <v-img :src="question.image" :class="question.image ? 'ma-auto mb-5 mt-n4' : 'd-none'" style="height: 200px;" />
+        <v-img :src="question.image" :class="question.image ? 'ma-auto mb-5' : 'd-none'" style="height: 200px;" />
         <ImageUpload @file-change="imageFileChangedHandler" />
 
         <v-text-field prepend-icon="mdi-help" type="text" label="Question" clearable placeholder="Enter the text"
@@ -33,7 +33,6 @@
             <p>Correct answer</p>
           </div>
           <v-btn-toggle v-model="goodAnswer" divided mandatory id="good_answer_selector" class="controls_subcontainer">
-
             <v-btn @click="changeGoodAnswer">1</v-btn>
             <v-btn @click="changeGoodAnswer">2</v-btn>
             <v-btn @click="changeGoodAnswer">3</v-btn>
@@ -108,14 +107,22 @@ export default {
     return {
       form: this.existent,
       question: this.currentQuestion,
-      goodAnswer: this.currentQuestion.possibleAnswers.findIndex((obj) => obj.isCorrect === true)
-    }
+      goodAnswer: this.currentQuestion.possibleAnswers.findIndex((obj) => obj.isCorrect === true),
+    };
   },
-  required(v) {
-    return !!v || 'Required'
-  },
-  imageFileChangedHandler(b64String) {
-    this.question.image = b64String;
+  methods: {
+    required(v) {
+      return !!v || 'Required'
+    },
+    imageFileChangedHandler(b64String) {
+      this.question.image = b64String;
+      console.log('this.question.image = ', this.question.image)
+    },
+    changeGoodAnswer() {
+      for (let i = 0; i < 4; i++) {
+        this.question.possibleAnswers[i].isCorrect = i === this.goodAnswer
+      }
+    },
   },
   emits: ["edited", "go-up", "go-down", "deleted"]
 }
