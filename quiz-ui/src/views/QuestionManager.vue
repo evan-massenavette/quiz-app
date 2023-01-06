@@ -6,24 +6,28 @@
         :currentAnswer="answers[currentQuestionPosition - 1]" @answer-selected="answerClickedHandler" />
       <v-progress-circular class="margin-top" :class="{ hidden: !loading }" indeterminate></v-progress-circular>
       <div class="margin-top">
-        <v-btn color="accent" :disabled="loading || !canGoBack()" @click="goBack()" icon="mdi-arrow-collapse-left"></v-btn>
-        <v-btn color="accent" :disabled="loading || !canGoNext()" @click="goNext()" icon="mdi-arrow-collapse-right"></v-btn>
-      </div> 
+        <v-btn color="accent" :disabled="loading || !canGoBack()" @click="goBack()"
+          icon="mdi-arrow-collapse-left"></v-btn>
+        <v-btn color="accent" :disabled="loading || !canGoNext()" @click="goNext()"
+          icon="mdi-arrow-collapse-right"></v-btn>
+      </div>
     </v-card>
   </v-container>
 </template>
 <style scoped>
-  .margin-top{
-    margin-top: 1em;
-  }
-  .hidden{
-    visibility: hidden;
-  }
+.margin-top {
+  margin-top: 1em;
+}
+
+.hidden {
+  visibility: hidden;
+}
 </style>
 <script>
 import QuizApiService from '@/services/QuizApiService';
 import StorageService from '@/services/StorageService';
 import QuestionDisplay from './QuestionDisplay.vue';
+
 export default {
   components: {
     QuestionDisplay
@@ -45,6 +49,10 @@ export default {
       answers: [],
       loading: false
     };
+  },
+  beforeCreate() {
+    const playerName = StorageService.getPlayerName();
+    if (!playerName) this.$router.push("/")
   },
   methods: {
     canGoBack() {

@@ -39,6 +39,7 @@ import ScoreTable from '@/views/ScoreTable.vue';
 <script>
 import QuizApiService from '@/services/QuizApiService';
 import ScoresService from '@/services/ScoresService';
+import StorageService from '@/services/StorageService';
 
 export default {
   name: "ScorePage",
@@ -52,6 +53,10 @@ export default {
       questionsAmount: 0,
       scoresTab: null,
     };
+  },
+  beforeCreate() {
+    const score = StorageService.getParticipationScore();
+    if (!score) this.$router.push("/")
   },
   async created() {
     // Get quiz info
