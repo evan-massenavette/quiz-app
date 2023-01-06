@@ -4,7 +4,7 @@
       :canGoDown="canGoDownQuestion(question)" @edited="modifyQuestion" @go-up="goUpQuestion" @go-down="goDownQuestion"
       @deleted="deleteQuestion" />
   </v-container>
-  <v-btn v-if="!isAdding" :disabled="loading" icon="mdi-plus" @click="isAdding = true"></v-btn>
+  <v-btn v-if="!isAdding" :disabled="loading" icon="mdi-plus" @click="isAdding = true" class="mt-5"></v-btn>
   <QuestionEditor v-else :loading="loading" :existent="false" @edited="addQuestion" :currentQuestion="emptyQuestion" />
 </template>
 
