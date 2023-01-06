@@ -74,7 +74,6 @@ function logout() {
  * @returns {Boolean} The authentication status
  */
 function isAuthenticated() {
-  console.log('_isAuthenticated = ', _isAuthenticated);
   return _isAuthenticated
 }
 
