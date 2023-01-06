@@ -1,10 +1,9 @@
 <template>
-  <div :keys="questions" v-for="(question,index) in questions">
-    <QuestionEditor :question="question" :loading="loading"/>
-    <v-btn :disabled="loading || !canGoUp(index)" @click="goUp(index)" icon="mdi-arrow-collapse-up"></v-btn>
-    <v-btn :disabled="loading || !canGoDown(index)" @click="goDown(index)" icon="mdi-arrow-collapse-down"></v-btn>
-    <v-btn :disabled="loading" @click="deleteAt(index)" icon="mdi-close"></v-btn>
+  <div :key="question.position" v-for="question in questions">
+    <QuestionEditor :currentQuestion="question" :loading="loading" :existent="true" :canGoUp="canGoUpQuestion(question)" :canGoDown="canGoDownQuestion(question)" @edited="modifyQuestion" @go-up="goUpQuestion" @go-down="goDownQuestion" @deleted="deleteQuestion"/>
   </div>
+  <v-btn v-if="!isAdding" :disabled="loading" icon="mdi-plus" @click="isAdding=true"></v-btn>
+  <QuestionEditor v-else :loading="loading" :existent="false" @edited="addQuestion"/>
 </template>
 <script>
 import QuizApiService from '@/services/QuizApiService'
@@ -22,7 +21,8 @@ export default {
           questions: [],
           size: 0,
           loading: false,
-          token: ""
+          token: "",
+          isAdding: false
       };
   },
   components: { QuestionEditor },
@@ -43,41 +43,62 @@ export default {
           console.error(e);
       }
     },
-    async changePosition(index, offset){
-      this.loading=true
+    async changePosition(question, offset){
       try{
-        const id = this.questions[index].id
-        const question = this.questions[index]
         question.position += offset
-        await QuizApiService.modifyQuestion(this.token,id,question.text,question.title,question.image,question.position,question.possibleAnswers)
+        await QuizApiService.modifyQuestion(this.token,question.id,question.text,question.title,question.image,question.position,question.possibleAnswers)
       } catch (e) {
         console.error(e)
       }
-      await this.loadQuestions()
-      this.loading=false 
+      await this.loadQuestions() 
     },
-    canGoUp(index){
-      return index>0
+    async goUpQuestion(question){
+      this.loading=true
+      await this.changePosition(question,-1)
+      this.loading=false
     },
-    async goUp(index){
-      await this.changePosition(index,-1)
+    async goDownQuestion(question){
+      this.loading=true
+      await this.changePosition(question,1)
+      this.loading=false
     },
-    canGoDown(index){
-      return index<this.size-1
-    },
-    async goDown(index){
-      await this.changePosition(index,1)
-    },
-    async deleteAt(index){
+    async deleteQuestion(question){
       this.loading=true
       try{
-        await QuizApiService.deleteQuestion(this.token,this.questions[index].id)
+        await QuizApiService.deleteQuestion(this.token,question.id)
       } catch (e) {
         console.error(e)
       }
       await this.loadQuestions()
       this.loading=false
-    }
+    },
+    async modifyQuestion(question){
+      this.loading=true
+      try{
+        await QuizApiService.modifyQuestion(this.token,question.id,question.text,question.title,question.image,question.position,question.possibleAnswers)
+      } catch(e) {
+        console.error(e)
+      }
+      await this.loadQuestions()
+      this.loading=false
+    },
+    async addQuestion(question){
+      this.loading=true
+      try{
+        await QuizApiService.addQuestion(this.token,question.text,question.title,question.image,++this.size,question.possibleAnswers)
+      } catch(e) {
+        console.error(e)
+      }
+      await this.loadQuestions()
+      this.isAdding=false
+      this.loading=false
+    },
+    canGoUpQuestion(question){
+      return question.position-1>0
+    },
+    canGoDownQuestion(question){
+      return question.position<this.size
+    },
   }
 }
 </script>
