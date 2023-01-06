@@ -13,7 +13,7 @@ import AuthService from '@/services/AuthService';
     <v-divider vertical class="header_divider" />
 
     <v-spacer />
-    <v-img src="src/assets/images/logo_1024x1024.png" />
+    <v-img src="logo.svg" />
     <v-spacer />
 
     <v-divider vertical class="header_divider" />

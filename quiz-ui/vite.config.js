@@ -14,5 +14,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
     extensions: [".js", ".json", ".vue"]
-  }
+  },
+  publicDir: 'src/public',
 })

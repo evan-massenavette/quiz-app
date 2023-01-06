@@ -22,7 +22,7 @@ so that all child components can access its content
 
 <style scoped>
 .v-main {
-  background-image: url('src/assets/images/space_background.jpg');
+  background-image: url('@/public/space_background.jpg');
   background-size: cover;
 }
 </style>
