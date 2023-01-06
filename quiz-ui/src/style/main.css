@@ -16,7 +16,7 @@ a {
 }
 
 #main_card {
-  padding: 10px 20px;
+  padding: 15px 20px;
   width: 800px;
   display: flex;
   flex-direction: column;
@@ -25,11 +25,18 @@ a {
   height: fit-content;
 }
 
-#main_card h1 {
+#main_card h1,
+#main_card h2,
+#main_card h3 {
   text-align: center;
+  margin: 0;
 }
 
 #main_card p {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.score_table_size {
+  width: max(250px, min(500px, 80%));
 }
