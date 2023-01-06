@@ -8,7 +8,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in tempScoresAndRanks" :key="item.playerName">
+      <tr v-for="item in tempScoresAndRanks" :key="item.playerName"
+        :id="item.rank == highlightedRank ? 'rank_one_row' : ''">
         <td class="text-center rank_column">{{ item.rank }}</td>
         <td>{{ item.playerName }}</td>
         <td>{{ item.score }}</td>
@@ -41,6 +42,12 @@ export default {
         return isValid;
       }
     }
+  },
+  props: {
+    highlightedRank: {
+      type: Number,
+      default: 1,
+    },
   },
   data() {
     return {
@@ -110,7 +117,7 @@ thead {
   width: 50px;
 }
 
-tbody:first-child {
-  color: rgb(var(--v-theme-accent))
+#rank_one_row {
+  color: rgb(var(--v-theme-accent));
 }
 </style>
