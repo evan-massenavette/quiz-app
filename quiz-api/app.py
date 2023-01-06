@@ -53,6 +53,27 @@ def get_quiz_info():
     return {'size': size, 'scores': scores}, 200
 
 
+@app.route('/questions/all', methods=['GET'])
+def get_all_questions():
+    # Get request question or database
+    database = Database(DB_URL)
+    try:
+        questions = database.get_all_questions()
+    except ValueError:
+        return 'Non existent content', 404
+    except Exception as e:
+        return f'Error while requesting content: {e}', 500
+    finally:
+        database.close()
+
+    # On vérifie que la question a bien été trouvé
+    if questions == None:
+        return 'No questions found', 404
+
+    questions = list(map(lambda x: x.to_json(), questions))
+    return questions, 200
+
+
 @app.route('/questions/<int:id>', methods=['GET'])
 def get_question_from_id(id: int):
     # Check if the id arg was given
