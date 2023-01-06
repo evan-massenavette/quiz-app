@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import participationStorageService from "@/services/ParticipationStorageService";
+import StorageService from "@/services/StorageService";
 
 export default {
   name: "NewQuizPage",
@@ -35,10 +35,10 @@ export default {
   methods: {
     launchNewQuiz() {
       if (!this.form) return
-      this.loading=true
-      participationStorageService.clear();
-      participationStorageService.savePlayerName(this.username);
-      this.loading=false
+      this.loading = true
+      StorageService.clear();
+      StorageService.savePlayerName(this.username);
+      this.loading = false
       this.$router.push('/questions');
     },
   }
