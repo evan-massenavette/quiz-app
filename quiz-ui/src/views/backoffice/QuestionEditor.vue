@@ -43,9 +43,10 @@
           <v-spacer />
 
           <v-card-actions class="controls_subcontainer">
-            <v-btn :disabled="loading || (!form && !existent)" :loading="loading" type="submit">{{
+            <v-btn :disabled="loading || (!form && !existent)" :loading="loading" type="submit" color="accent">{{
               existent? "Edit": "Add"
             }}</v-btn>
+
             <v-btn v-if="existent" :disabled="loading || !canGoUp" @click="$emit('go-up', question)"
               icon="mdi-arrow-collapse-up"></v-btn>
             <v-btn v-if="existent" :disabled="loading || !canGoDown" @click="$emit('go-down', question)"
