@@ -28,7 +28,7 @@
           </v-btn-toggle>
         </v-card-text>
         <v-card-actions>
-          <v-btn :disabled="loading || (!form && !existent) " :loading="loading" type="submit">Edit</v-btn>
+          <v-btn :disabled="loading || (!form && !existent) " :loading="loading" type="submit">{{ existent? "Edit" : "Add" }}</v-btn>
           <v-btn v-if="existent" :disabled="loading || !canGoUp" @click="$emit('go-up',question)" icon="mdi-arrow-collapse-up"></v-btn>
           <v-btn v-if="existent" :disabled="loading || !canGoDown" @click="$emit('go-down',question)" icon="mdi-arrow-collapse-down"></v-btn>
           <v-btn v-if="existent" :disabled="loading" @click="$emit('deleted',question)" icon="mdi-close"></v-btn>
@@ -43,13 +43,16 @@ export default {
   components: { ImageUpload },
     props: {
         currentQuestion: {
-            type: Object
+            type: Object,
+            required: true
         },
         loading: {
-            type: Boolean
+            type: Boolean,
+            required: true
         },
         existent: {
-            type: Boolean
+            type: Boolean,
+            required: true
         },
         canGoUp: {
             type: Boolean
@@ -61,7 +64,7 @@ export default {
     data(){
       return{
         form: this.existent,
-        question: this.currentQuestion || {title:"",image:"",text:"",possibleAnswers:[{text:"",isCorrect:true},{text:"",isCorrect:false},{text:"",isCorrect:false},{text:"",isCorrect:false}]},
+        question: this.currentQuestion,
         goodAnswer: this.currentQuestion.possibleAnswers.findIndex((obj)=>obj.isCorrect===true)
       }
     },

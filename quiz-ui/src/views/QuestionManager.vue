@@ -1,14 +1,14 @@
 <template>
-  <v-container>
-    <v-card loading class="mx-auto my-12">
-      <div class="card-content"> <!--hérite du style de HomePage-->
-        <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }} :</h1>
-        <QuestionDisplay :loading="loading" :question="currentQuestion"
-          :currentAnswer="answers[currentQuestionPosition - 1]" @answer-selected="answerClickedHandler" />
-        <v-btn :disabled="loading || !canGoBack()" @click="goBack()" icon="mdi-arrow-collapse-left"></v-btn>
-        <v-btn :disabled="loading || !canGoNext()" @click="goNext()" icon="mdi-arrow-collapse-right"></v-btn>
-        <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
-      </div>
+  <v-container id="main_card_wrapper" fluid>
+    <v-card id="main_card">
+      <h1>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }} :</h1>
+      <QuestionDisplay :loading="loading" :question="currentQuestion"
+        :currentAnswer="answers[currentQuestionPosition - 1]" @answer-selected="answerClickedHandler" />
+      <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
+      <div>
+        <v-btn color="accent" :disabled="loading || !canGoBack()" @click="goBack()" icon="mdi-arrow-collapse-left"></v-btn>
+        <v-btn color="accent" :disabled="loading || !canGoNext()" @click="goNext()" icon="mdi-arrow-collapse-right"></v-btn>
+      </div> 
     </v-card>
   </v-container>
 </template>

@@ -3,7 +3,7 @@
     <QuestionEditor :currentQuestion="question" :loading="loading" :existent="true" :canGoUp="canGoUpQuestion(question)" :canGoDown="canGoDownQuestion(question)" @edited="modifyQuestion" @go-up="goUpQuestion" @go-down="goDownQuestion" @deleted="deleteQuestion"/>
   </div>
   <v-btn v-if="!isAdding" :disabled="loading" icon="mdi-plus" @click="isAdding=true"></v-btn>
-  <QuestionEditor v-else :loading="loading" :existent="false" @edited="addQuestion"/>
+  <QuestionEditor v-else :loading="loading" :existent="false" @edited="addQuestion" :currentQuestion="emptyQuestion"/>
 </template>
 <script>
 import QuizApiService from '@/services/QuizApiService'
@@ -20,6 +20,7 @@ export default {
       return {
           questions: [],
           size: 0,
+          emptyQuestion: {title:"",image:"",text:"",possibleAnswers:[{text:"",isCorrect:true},{text:"",isCorrect:false},{text:"",isCorrect:false},{text:"",isCorrect:false}]},
           loading: false,
           token: "",
           isAdding: false
