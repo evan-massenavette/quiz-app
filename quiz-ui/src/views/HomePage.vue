@@ -3,7 +3,7 @@ import ScoreTable from '@/views/ScoreTable.vue';
 </script >
 
 <template>
-  <v-container id="main_card_wrapper" class="d-flex">
+  <v-container id="main_card_wrapper">
     <v-card id="main_card">
       <h1>Space quiz !</h1>
       <p>Here is a little quiz on space and astronomy.</p>
@@ -39,9 +39,9 @@ export default {
 
 <style scoped>
 #main_card_wrapper {
-  width: 100%;
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 #main_card {
@@ -51,6 +51,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: fit-content;
 }
 
 #main_card h1 {
