@@ -13,7 +13,6 @@ import QuestionList from '@/views/backoffice/QuestionList.vue'
 
 <script>
 import AuthService from '@/services/AuthService';
-import QuestionList from './QuestionList.vue';
 
 export default {
   beforeCreate() {
