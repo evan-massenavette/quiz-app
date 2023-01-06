@@ -1,17 +1,28 @@
 export default {
+    // Session storage (front office)
     clear() {
-        window.localStorage.clear()
+        window.sessionStorage.clear()
     },
     savePlayerName(playerName) {
-        window.localStorage.setItem("playerName", playerName);
+        window.sessionStorage.setItem("playerName", playerName);
     },
     getPlayerName() {
-        return window.localStorage.getItem("playerName")
+        return window.sessionStorage.getItem("playerName")
     },
     saveParticipationScore(participationScore) {
-        window.localStorage.setItem("score", participationScore)
+        window.sessionStorage.setItem("score", participationScore)
     },
     getParticipationScore() {
-        return window.localStorage.getItem("score")
+        return window.sessionStorage.getItem("score")
+    },
+    // Local storage (back office)
+    saveToken(token) {
+        window.localStorage.setItem("token", token)
+    },
+    getToken() {
+        return window.localStorage.getItem("token")
+    },
+    deleteToken() {
+        window.localStorage.removeItem("token")
     }
 };
