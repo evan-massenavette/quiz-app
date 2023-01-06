@@ -3,7 +3,7 @@ import ScoreTable from '@/views/ScoreTable.vue';
 </script >
 
 <template>
-  <v-container id="main_card_wrapper" class="d-flex">
+  <v-container id="main_card_wrapper" fluid>
     <v-card id="main_card">
       <h1>Space quiz !</h1>
       <p>Here is a little quiz on space and astronomy.</p>
@@ -12,9 +12,6 @@ import ScoreTable from '@/views/ScoreTable.vue';
       </v-btn>
       <v-container id="scores_container" v-if="true || registeredScores && registeredScores.length > 0">
         <h1>High scores</h1>
-        <div v-for="scoreEntry in registeredScores" v-bind:key="scoreEntry.date">
-          {{ scoreEntry.playerName }} - {{ scoreEntry.score }}
-        </div>
         <ScoreTable id="score_table" />
       </v-container>
     </v-card>
@@ -32,16 +29,16 @@ export default {
     };
   },
   async created() {
-    this.registeredScores = await quizApiService.getQuizInfo().data;
+    this.registeredScores = await quizApiService.getQuizInfo();
   }
 };
 </script>
 
 <style scoped>
 #main_card_wrapper {
-  width: 100%;
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 #main_card {
@@ -51,6 +48,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: fit-content;
 }
 
 #main_card h1 {

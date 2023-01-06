@@ -1,16 +1,13 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import Header from '@/views/Header.vue'
+import PageHeader from '@/views/PageHeader.vue'
 </script>
 
 <template>
   <v-app>
-    <Header />
-
-    <v-main>
-      <v-parallax src="src/assets/images/space_background.jpg">
-        <RouterView />
-      </v-parallax>
+    <PageHeader />
+    <v-main class="v-main">
+      <RouterView class="main_router_view" />
     </v-main>
   </v-app>
 </template>
@@ -26,10 +23,11 @@ export default {
 @import '@/assets/main.css';
 
 .v-main {
-  top: 0px;
-  left: 0px;
-  position: fixed;
-  width: 100%;
-  height: 100%;
+  background-image: url('@/assets/images/space_background.jpg');
+  background-size: cover;
+}
+
+.main_router_view {
+  border: 1px solid blue;
 }
 </style>

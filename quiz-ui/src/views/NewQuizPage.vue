@@ -8,7 +8,7 @@
             :rules="rules" :readonly="loading" v-model="username" />
         </v-card-text>
         <v-card-actions>
-          <v-btn :disabled="!form" :loading="loading" type="submit">GO!</v-btn>
+          <v-btn id="go_button" :disabled="!form" :loading="loading" type="submit">GO!</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
@@ -46,9 +46,8 @@ export default {
 </script>
 
 <style>
-.v-btn {
-  color: black;
-  font-size: large;
-  border-width: thin;
+#go_button {
+  background-color: rgb(var(--v-theme-accent));
+  width: fit-content;
 }
 </style>
