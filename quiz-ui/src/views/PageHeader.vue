@@ -68,6 +68,9 @@ export default {
     },
   },
   created() {
+    // Set loggedIn flag
+    this.loggedIn = AuthService.isAuthenticated();
+
     // Register login callback
     AuthService.setLoginCallback(this.loginCallback)
   },

@@ -26,3 +26,14 @@ so that all child components can access its content
   background-size: cover;
 }
 </style>
+
+<script>
+import AuthService from './services/AuthService';
+
+export default {
+  name: 'App',
+  beforeCreate() {
+    AuthService.updateAuthStatus();
+  }
+};
+</script>
