@@ -12,18 +12,17 @@ import PageHeader from '@/views/PageHeader.vue'
   </v-app>
 </template>
 
-<script>
-export default {
-  name: 'App'
-};
-</script>
-
-
 <style>
+/* 
+Import main CSS in non-scoped style block 
+so that all child components can access its content
+*/
 @import '@/style/main.css';
+</style>
 
+<style scoped>
 .v-main {
-  background-image: url('@/assets/images/space_background.jpg');
+  background-image: url('src/assets/images/space_background.jpg');
   background-size: cover;
 }
 </style>
