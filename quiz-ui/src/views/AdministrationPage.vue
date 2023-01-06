@@ -5,3 +5,14 @@
     </v-card>
   </v-container>
 </template>
+<script>
+import StorageService from '@/services/StorageService';
+export default {
+  beforeCreate(){
+    const token = StorageService.getToken()
+    if (!token){
+      this.$router.push("/login")
+    }
+  },
+}
+</script>

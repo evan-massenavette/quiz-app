@@ -18,7 +18,15 @@
 </template>
 
 <script>
+import StorageService from '@/services/StorageService';
+import QuizApiService from '@/services/QuizApiService';
 export default {
+  beforeCreate(){
+    const token = StorageService.getToken()
+    if (token){
+      this.$router.push("/administration")
+    }
+  },
   name: "LoginPage",
   data() {
     return {
@@ -28,10 +36,11 @@ export default {
     };
   },
   methods: {
-    login() {
+    async login() {
       if (!this.form) return
       this.loading = true
-      console.log("fonction login a rajouté ici")
+      const token = await QuizApiService.login(this.password)
+      StorageService.saveToken(token)
       this.loading=false
       this.$router.push('/administration');
     },
