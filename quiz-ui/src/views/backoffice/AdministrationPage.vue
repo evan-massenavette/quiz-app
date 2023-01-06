@@ -2,7 +2,7 @@
   <v-container>
     <v-card class="mx-auto my-12">
       <v-card-title>Administration Page</v-card-title>
-      <question-list/>
+      <QuestionList/>
     </v-card>
   </v-container>
 </template>

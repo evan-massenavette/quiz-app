@@ -21,6 +21,12 @@
             :rules="[required]" :disabled="loading" v-model="question.possibleAnswers[2].text" />
           <v-text-field prepend-icon="mdi-form-textbox" type="text" label="Answer 4" clearable placeholder="Enter the answer"
             :rules="[required]" :disabled="loading" v-model="question.possibleAnswers[3].text" />
+          <v-btn-toggle v-model="goodAnswer" divided mandatory>
+            <v-btn @click="changeGoodAnswer">1</v-btn>
+            <v-btn @click="changeGoodAnswer">2</v-btn>
+            <v-btn @click="changeGoodAnswer">3</v-btn>
+            <v-btn @click="changeGoodAnswer">4</v-btn>
+          </v-btn-toggle>
         </v-card-text>
         <v-card-actions>
           <v-btn :disabled="loading || (!form && !existent) " :loading="loading" type="submit">Edit</v-btn>
@@ -56,10 +62,16 @@ export default {
     data(){
       return{
         form: this.existent,
-        question: this.currentQuestion || {title:"",image:"",text:"",possibleAnswers:[{text:"",isCorrect:true},{text:"",isCorrect:false},{text:"",isCorrect:false},{text:"",isCorrect:false}]}
+        question: this.currentQuestion || {title:"",image:"",text:"",possibleAnswers:[{text:"",isCorrect:true},{text:"",isCorrect:false},{text:"",isCorrect:false},{text:"",isCorrect:false}]},
+        goodAnswer: this.currentQuestion.possibleAnswers.findIndex((obj)=>obj.isCorrect===true)
       }
     },
     methods:{
+      changeGoodAnswer(){
+        for(let i=0;i<4;i++){
+          this.question.possibleAnswers[i].isCorrect = i===this.goodAnswer
+        }
+      },
       required(v){
         return !!v || 'Required'
       },
