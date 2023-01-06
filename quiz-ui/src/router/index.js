@@ -9,13 +9,13 @@ const router = createRouter({
       component: () => import('@/views/HomePage.vue')
     },
     {
-      path: '/start-new-quiz-page',
+      path: '/start-new-quiz',
       name: 'NewQuizPage',
       component: () => import('@/views/NewQuizPage.vue')
     },
     {
       path: '/questions',
-      name: 'Questions',
+      name: 'QuestionsPage',
       component: () => import('@/views/QuestionManager.vue')
     },
     {
@@ -29,7 +29,7 @@ const router = createRouter({
       component: () => import('@/views/LoginPage.vue')
     },
     {
-      path: '/score-page',
+      path: '/score',
       name: 'ScorePage',
       component: () => import('@/views/ScorePage.vue')
     }

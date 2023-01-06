@@ -7,7 +7,7 @@ import PageHeader from '@/views/PageHeader.vue'
   <v-app>
     <PageHeader />
     <v-main class="v-main">
-      <RouterView class="main_router_view" />
+      <RouterView/>
     </v-main>
   </v-app>
 </template>
@@ -25,9 +25,5 @@ export default {
 .v-main {
   background-image: url('@/assets/images/space_background.jpg');
   background-size: cover;
-}
-
-.main_router_view {
-  border: 1px solid blue;
 }
 </style>
