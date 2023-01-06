@@ -5,7 +5,7 @@ import QuestionList from '@/views/backoffice/QuestionList.vue'
 <template>
   <v-container id="main_card_wrapper">
     <v-card id="main_card">
-      <h1>Administration Page</h1>
+      <h1>Edit Quiz</h1>
       <QuestionList />
     </v-card>
   </v-container>
