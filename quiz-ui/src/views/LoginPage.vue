@@ -5,9 +5,8 @@
         <h1>Admin Login</h1>
         <v-card color="error" v-if="this.errorMessage" class="text-center pa-2 mt-2">{{ this.errorMessage }}</v-card>
         <v-card-text>
-          <v-text-field prepend-inner-icon="mdi-form-textbox-password" variant="outlined" type="password"
-            label="Password" clearable placeholder="Enter your password" :rules="[required]" :readonly="loading"
-            v-model="password">
+          <v-text-field prepend-inner-icon="mdi-form-textbox-password" type="password" label="Password" clearable
+            placeholder="Enter your password" :rules="[required]" :readonly="loading" v-model="password">
           </v-text-field>
         </v-card-text>
         <v-card-actions>
