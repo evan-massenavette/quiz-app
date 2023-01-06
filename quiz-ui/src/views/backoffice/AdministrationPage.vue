@@ -1,20 +1,24 @@
+<script setup>
+import QuestionList from '@/views/backoffice/QuestionList.vue'
+</script>
+
 <template>
-  <v-container>
-    <v-card class="mx-auto my-12">
-      <v-card-title>Administration Page</v-card-title>
-      <QuestionList/>
+  <v-container id="main_card_wrapper">
+    <v-card id="main_card">
+      <h1>Administration Page</h1>
+      <QuestionList />
     </v-card>
   </v-container>
 </template>
+
 <script>
 import AuthService from '@/services/AuthService';
-import QuestionList from './QuestionList.vue';
 
 export default {
-    beforeCreate() {
-        if (!AuthService.isAuthenticated())
-            this.$router.push("/login");
-    },
-    components: { QuestionList }
+  beforeCreate() {
+    if (!AuthService.isAuthenticated())
+      this.$router.push("/login");
+  },
+  components: { QuestionList }
 }
 </script>
