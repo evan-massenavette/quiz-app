@@ -1,6 +1,6 @@
 <script setup>
 import ScoreTable from '@/views/ScoreTable.vue';
-</script >
+</script>
 
 <template>
   <v-container>
