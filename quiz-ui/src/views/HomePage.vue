@@ -7,7 +7,7 @@ import ScoreTable from '@/views/ScoreTable.vue';
     <v-card id="main_card">
       <h1>Space quiz !</h1>
       <p>Here is a little quiz on space and astronomy.</p>
-      <v-btn id="goto_quiz_button" to="/start-new-quiz-page">
+      <v-btn id="goto_quiz_button" to="/start-new-quiz">
         Start the quiz now!
       </v-btn>
       <v-container id="scores_container" v-if="true || registeredScores && registeredScores.length > 0">
