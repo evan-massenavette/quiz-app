@@ -1,9 +1,9 @@
 <template>
-  <div :key="question.position" v-for="question in questions">
+  <v-container class="pa-0" :key="question.position" v-for="question in questions">
     <QuestionEditor :currentQuestion="question" :loading="loading" :existent="true" :canGoUp="canGoUpQuestion(question)"
       :canGoDown="canGoDownQuestion(question)" @edited="modifyQuestion" @go-up="goUpQuestion" @go-down="goDownQuestion"
       @deleted="deleteQuestion" />
-  </div>
+  </v-container>
   <v-btn v-if="!isAdding" :disabled="loading" icon="mdi-plus" @click="isAdding = true"></v-btn>
   <QuestionEditor v-else :loading="loading" :existent="false" @edited="addQuestion" :currentQuestion="emptyQuestion" />
 </template>

@@ -41,7 +41,6 @@
         <v-btn v-if="existent" :disabled="loading" @click="$emit('deleted', question)" icon="mdi-close"></v-btn>
       </v-card-actions>
     </v-form>
-    </v-card>
   </v-container>
 </template>
 
@@ -82,8 +81,7 @@ export default {
   },
   imageFileChangedHandler(b64String) {
     this.question.image = b64String;
-  }
-},
-emits: ["edited", "go-up", "go-down", "deleted"]
+  },
+  emits: ["edited", "go-up", "go-down", "deleted"]
 }
 </script>
