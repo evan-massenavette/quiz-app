@@ -24,6 +24,8 @@ import ScoreTable from '@/views/ScoreTable.vue';
         </v-window>
       </div>
 
+      <v-btn to="/start-new-quiz" color="accent" class="mt-5">Try again</v-btn>
+
     </v-card>
   </v-container>
 </template>
