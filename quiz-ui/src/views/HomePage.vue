@@ -13,7 +13,7 @@ import ScoreTable from '@/views/ScoreTable.vue';
       <v-btn to="/start-new-quiz" color="accent">
         Start the quiz now!
       </v-btn>
-      <v-container class="d-flex flex-column align-center" v-if="true || highestScores && highestScores.length > 0">
+      <v-container class="d-flex flex-column align-center" v-if="highestScores && highestScores.length > 0">
         <h1>Highest Scores</h1>
         <ScoreTable :scores-and-ranks="this.highestScores" class="score_table_size" />
       </v-container>

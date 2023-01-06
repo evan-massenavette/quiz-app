@@ -21,7 +21,7 @@ function updateAuthStatus() {
     _isAuthenticated = false;
     return;
   }
-  return true;
+  _isAuthenticated = true;
 }
 
 
@@ -74,6 +74,7 @@ function logout() {
  * @returns {Boolean} The authentication status
  */
 function isAuthenticated() {
+  console.log('_isAuthenticated = ', _isAuthenticated);
   return _isAuthenticated
 }
 
@@ -85,7 +86,10 @@ function setLoginCallback(callback) {
   _loginCallback = callback;
 }
 
+updateAuthStatus();
+
 export default {
+  updateAuthStatus,
   isAuthenticated,
   login,
   logout,
