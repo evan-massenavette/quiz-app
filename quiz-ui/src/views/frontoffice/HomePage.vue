@@ -37,17 +37,19 @@ export default {
     // Get quiz info
     const response = await QuizApiService.getQuizInfo();
     if (response === undefined) {
-      console.error(`HomePage: Could not get quiz info`)
+      console.error(`HomePage: Could not get quiz info`);
       return
     }
 
     // Extract data from quiz info
     this.questionsAmount = response.data.size;
-    this.highestScores = response.data.scores;
+    registeredScores = response.data.scores;
 
     // Get the highest scores and add rank for each particiation
-    ScoresService.sort(this.highestScores);
-    ScoresService.addRanks(this.highestScores);
+    ScoresService.sort(registeredScores);
+    ScoresService.addRanks(registeredScores);
+
+    this.highestScores = ScoresService.getHighestScores(registeredScores);
   }
 };
 </script>
