@@ -8,7 +8,7 @@ from models import Question
 app = Flask(__name__)
 CORS(app)
 
-DB_URL = 'bdd.db'
+DB_URL = 'quiz.db'
 
 ###
 # Rebuild database / Add static data
