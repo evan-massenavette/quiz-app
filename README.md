@@ -4,6 +4,6 @@ Projet de Développement Web Full Stack
 
 ### Membres du groupe :
 
-Evan MASSENAVETTE
-Vincent Roux
+Evan MASSENAVETTE  
+Vincent Roux  
 Céline LEMONNIER
