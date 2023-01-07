@@ -1,5 +1,5 @@
 <script setup>
-import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
+import ScoreTable from "@/views/frontoffice/ScoreTable.vue";
 </script>
 
 <template>
@@ -7,15 +7,19 @@ import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
     <v-card id="main_card">
       <h1>Space quiz !</h1>
       <p>
-        Here is a little quiz on space and astronomy !
-        How many can you get right out of {{ questionsAmount }} ?
+        Here is a little quiz on space and astronomy ! How many can you get
+        right out of {{ questionsAmount }} ?
       </p>
-      <v-btn to="/start-new-quiz" color="accent">
-        Start the quiz now!
-      </v-btn>
-      <v-container class="d-flex flex-column align-center" v-if="highestScores && highestScores.length > 0">
+      <v-btn to="/start-new-quiz" color="accent"> Start the quiz now! </v-btn>
+      <v-container
+        class="d-flex flex-column align-center"
+        v-if="highestScores && highestScores.length > 0"
+      >
         <h1>Highest Scores</h1>
-        <ScoreTable :scores-and-ranks="highestScores" class="score_table_size" />
+        <ScoreTable
+          :scores-and-ranks="highestScores"
+          class="score_table_size"
+        />
       </v-container>
     </v-card>
   </v-container>
@@ -23,7 +27,7 @@ import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
 
 <script>
 import QuizApiService from "@/services/QuizApiService";
-import ScoresService from '@/services/ScoresService';
+import ScoresService from "@/services/ScoresService";
 
 export default {
   name: "HomePage",
@@ -38,18 +42,18 @@ export default {
     const response = await QuizApiService.getQuizInfo();
     if (response === undefined) {
       console.error(`HomePage: Could not get quiz info`);
-      return
+      return;
     }
 
     // Extract data from quiz info
     this.questionsAmount = response.data.size;
-    registeredScores = response.data.scores;
+    const registeredScores = response.data.scores;
 
     // Get the highest scores and add rank for each particiation
     ScoresService.sort(registeredScores);
     ScoresService.addRanks(registeredScores);
 
     this.highestScores = ScoresService.getHighestScores(registeredScores);
-  }
+  },
 };
 </script>

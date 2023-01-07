@@ -1,9 +1,9 @@
-import * as jose from 'jose'
-import QuizApiService from '@/services/QuizApiService'
-import StorageService from '@/services/StorageService'
+import * as jose from "jose";
+import QuizApiService from "@/services/QuizApiService";
+import StorageService from "@/services/StorageService";
 
 let _isAuthenticated = false;
-let _loginCallback = () => { };
+let _loginCallback = () => {};
 
 /**
  * Update the Auth status of the module
@@ -16,25 +16,23 @@ function updateAuthStatus() {
   }
   try {
     jose.decodeJwt(token);
-  }
-  catch {
+  } catch {
     _isAuthenticated = false;
     return;
   }
   _isAuthenticated = true;
 }
 
-
 /**
  * Perform login
  * Throws Error if login wasn't successful.
- * @param {string} password 
+ * @param {string} password
  * @returns {string} The user's name
  */
 async function login(password) {
-  const tokenRequest = await QuizApiService.login(password)
+  const tokenRequest = await QuizApiService.login(password);
 
-  const wrongDetailsError = Error('Invalid login details. Try again.');
+  const wrongDetailsError = Error("Invalid login details. Try again.");
 
   // Check if request failed
   if (!tokenRequest || tokenRequest.status !== 200) {
@@ -48,16 +46,15 @@ async function login(password) {
   let decoded;
   try {
     decoded = jose.decodeJwt(token);
-  }
-  catch {
+  } catch {
     throw wrongDetailsError;
   }
 
   // Success
-  StorageService.saveToken(token)
+  StorageService.saveToken(token);
   _isAuthenticated = true;
   _loginCallback();
-  console.info('Successfully logged in')
+  console.info("Successfully logged in");
 
   return decoded.sub;
 }
@@ -66,7 +63,7 @@ async function login(password) {
  * Perform logout.
  */
 function logout() {
-  StorageService.deleteToken()
+  StorageService.deleteToken();
   _isAuthenticated = false;
 }
 
@@ -74,12 +71,12 @@ function logout() {
  * @returns {Boolean} The authentication status
  */
 function isAuthenticated() {
-  return _isAuthenticated
+  return _isAuthenticated;
 }
 
 /**
- * 
- * @param {Function} callback 
+ *
+ * @param {Function} callback
  */
 function setLoginCallback(callback) {
   _loginCallback = callback;
@@ -93,4 +90,4 @@ export default {
   login,
   logout,
   setLoginCallback,
-}
+};

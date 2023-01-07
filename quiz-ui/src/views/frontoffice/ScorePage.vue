@@ -1,5 +1,5 @@
 <script setup>
-import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
+import ScoreTable from "@/views/frontoffice/ScoreTable.vue";
 </script>
 
 <template>
@@ -9,7 +9,13 @@ import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
       <h3>Highest score: {{ yourHighestScore }} / {{ questionsAmount }}</h3>
 
       <div class="score_table_size mt-5">
-        <v-tabs v-model="scoresTab" fixed-tabs color="accent" bg-color="surface-lighten-1" density="comfortable">
+        <v-tabs
+          v-model="scoresTab"
+          fixed-tabs
+          color="accent"
+          bg-color="surface-lighten-1"
+          density="comfortable"
+        >
           <v-tab key="highest_scores">Highest Scores</v-tab>
           <v-tab key="your_best_score">Your Best Score</v-tab>
         </v-tabs>
@@ -19,13 +25,15 @@ import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
             <ScoreTable :scores-and-ranks="highestScores" />
           </v-window-item>
           <v-window-item key="your_best_score">
-            <ScoreTable :scores-and-ranks="scoresNearYou" :highlighted-rank="yourRank" />
+            <ScoreTable
+              :scores-and-ranks="scoresNearYou"
+              :highlighted-rank="yourRank"
+            />
           </v-window-item>
         </v-window>
       </div>
 
       <v-btn to="/start-new-quiz" color="accent" class="mt-5">Try again</v-btn>
-
     </v-card>
   </v-container>
 </template>
@@ -37,9 +45,9 @@ import ScoreTable from '@/views/frontoffice/ScoreTable.vue';
 </style>
 
 <script>
-import QuizApiService from '@/services/QuizApiService';
-import ScoresService from '@/services/ScoresService';
-import StorageService from '@/services/StorageService';
+import QuizApiService from "@/services/QuizApiService";
+import ScoresService from "@/services/ScoresService";
+import StorageService from "@/services/StorageService";
 
 export default {
   name: "ScorePage",
@@ -56,14 +64,14 @@ export default {
   },
   beforeCreate() {
     const score = StorageService.getParticipationScore();
-    if (!score) this.$router.push("/")
+    if (!score) this.$router.push("/");
   },
   async created() {
     // Get quiz info
-    const response = await QuizApiService.getQuizInfo()
+    const response = await QuizApiService.getQuizInfo();
     if (response === undefined) {
-      console.error(`HomePage: Could not get quiz info`)
-      return
+      console.error(`HomePage: Could not get quiz info`);
+      return;
     }
     this.registeredScores = response.data.scores;
     this.questionsAmount = response.data.size;
@@ -74,7 +82,9 @@ export default {
 
     // Get info for current user
     this.yourScore = ScoresService.getYourScore();
-    this.yourHighestScore = ScoresService.getYourHighestScore(this.registeredScores);
+    this.yourHighestScore = ScoresService.getYourHighestScore(
+      this.registeredScores
+    );
     this.yourRank = ScoresService.getYourRank(this.registeredScores);
 
     // Get scores for tables

@@ -8,8 +8,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in scoresAndRanks" :key="item.playerName"
-        :id="item.rank == highlightedRank ? 'rank_one_row' : ''">
+      <tr
+        v-for="item in scoresAndRanks"
+        :key="item.playerName"
+        :id="item.rank == highlightedRank ? 'rank_one_row' : ''"
+      >
         <td class="text-center rank_column">{{ item.rank }}</td>
         <td>{{ item.playerName }}</td>
         <td>{{ item.score }}</td>
@@ -30,22 +33,25 @@ export default {
       type: Array,
       default: (rawProps) => [],
       validator: (value) => {
-        const neededKeys = ['playerName', 'score', 'rank']
+        const neededKeys = ["playerName", "score", "rank"];
 
         // Function to check that object has certain keys
-        const hasAllKeys = (obj, keys) => keys.every(key => obj.hasOwnProperty(key));
+        const hasAllKeys = (obj, keys) =>
+          keys.every((key) => obj.hasOwnProperty(key));
 
         // Check that every object inside value has all the needed keys
-        const isValid = value.every(element => hasAllKeys(element, neededKeys));
+        const isValid = value.every((element) =>
+          hasAllKeys(element, neededKeys)
+        );
 
         if (!isValid) {
           console.warn(`Every object in the 'scoresAndRanks' array needs to 
-          have the following keys : ${neededKeys.join(', ')}`)
+          have the following keys : ${neededKeys.join(", ")}`);
         }
 
         return isValid;
-      }
-    }
+      },
+    },
   },
 };
 </script>

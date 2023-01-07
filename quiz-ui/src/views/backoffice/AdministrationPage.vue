@@ -1,5 +1,5 @@
 <script setup>
-import QuestionList from '@/views/backoffice/QuestionList.vue'
+import QuestionList from "@/views/backoffice/QuestionList.vue";
 </script>
 
 <template>
@@ -12,13 +12,12 @@ import QuestionList from '@/views/backoffice/QuestionList.vue'
 </template>
 
 <script>
-import AuthService from '@/services/AuthService';
+import AuthService from "@/services/AuthService";
 
 export default {
   beforeCreate() {
-    if (!AuthService.isAuthenticated())
-      this.$router.push("/login");
+    if (!AuthService.isAuthenticated()) this.$router.push("/login");
   },
-  components: { QuestionList }
-}
+  components: { QuestionList },
+};
 </script>

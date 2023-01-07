@@ -1,6 +1,13 @@
 <template>
-  <v-file-input label="Image" @change="fileChange" @click:clear="clickRemoveImageHandler" :disabled="isSaving"
-    :rules="[weight]" accept="image/jpeg, image/png, image/gif" prepend-icon="mdi-image"></v-file-input>
+  <v-file-input
+    label="Image"
+    @change="fileChange"
+    @click:clear="clickRemoveImageHandler"
+    :disabled="isSaving"
+    :rules="[weight]"
+    accept="image/jpeg, image/png, image/gif"
+    prepend-icon="mdi-image"
+  ></v-file-input>
 </template>
 
 <script>
@@ -40,8 +47,13 @@ export default {
       this.$emit("file-change", "");
     },
     weight(value) {
-      return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
-    }
-  }
+      return (
+        !value ||
+        !value.length ||
+        value[0].size < 2000000 ||
+        "Avatar size should be less than 2 MB!"
+      );
+    },
+  },
 };
 </script>

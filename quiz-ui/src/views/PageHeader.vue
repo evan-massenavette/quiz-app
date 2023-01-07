@@ -1,11 +1,10 @@
 <script setup>
-import { RouterLink } from 'vue-router'
-import AuthService from '@/services/AuthService';
+import { RouterLink } from "vue-router";
+import AuthService from "@/services/AuthService";
 </script>
 
 <template>
   <v-app-bar height="50" color="surface">
-
     <RouterLink class="header_button" to="/">
       <v-icon icon="mdi-home" />
       <p>Home</p>
@@ -23,7 +22,12 @@ import AuthService from '@/services/AuthService';
     </RouterLink>
 
     <v-divider vertical class="header_divider" />
-    <RouterLink to="/login" class="header_button" v-if="loggedIn" @click="logout()">
+    <RouterLink
+      to="/login"
+      class="header_button"
+      v-if="loggedIn"
+      @click="logout()"
+    >
       <v-icon icon="mdi-login-variant" />
       <p>Admin Logout</p>
     </RouterLink>
@@ -31,7 +35,6 @@ import AuthService from '@/services/AuthService';
       <v-icon icon="mdi-login-variant" />
       <p>Admin Login</p>
     </RouterLink>
-
   </v-app-bar>
 </template>
 
@@ -45,7 +48,7 @@ import AuthService from '@/services/AuthService';
   padding: 0 10px;
 }
 
-.header_button>p {
+.header_button > p {
   margin-left: 5px;
 }
 
@@ -61,11 +64,11 @@ import AuthService from '@/services/AuthService';
 
 <script>
 export default {
-  name: 'PageHeader',
+  name: "PageHeader",
   data() {
     return {
       loggedIn: false,
-    }
+    };
   },
   methods: {
     loginCallback() {
@@ -74,7 +77,7 @@ export default {
     logout() {
       this.loggedIn = false;
       AuthService.logout();
-      this.$router.push('/')
+      this.$router.push("/");
     },
   },
   created() {
@@ -82,8 +85,7 @@ export default {
     this.loggedIn = AuthService.isAuthenticated();
 
     // Register login callback
-    AuthService.setLoginCallback(this.loginCallback)
+    AuthService.setLoginCallback(this.loginCallback);
   },
-
-}
+};
 </script>
